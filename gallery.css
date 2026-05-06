@@ -46,28 +46,3 @@
   height: 100%;
   object-fit: cover;
 }
-
-/* Always-on hairline caption beneath each plate (full gallery only) */
-.gallery-full .gallery-caption {
-  position: static;
-  padding: var(--space-3) 0 0;
-  background: none;
-  color: var(--color-text-faint);
-  opacity: 1;
-  transform: none;
-  transition: none;
-  font-weight: 400;
-}
-
-.gallery-full .gallery-item:hover .gallery-caption {
-  opacity: 1;
-  transform: none;
-}
-
-.gallery-full .gallery-caption-num {
-  color: var(--color-text-muted);
-}
-
-.gallery-full .gallery-caption-loc {
-  color: var(--color-text-faint);
-}
