@@ -44,32 +44,7 @@
   }
 })();
 
-// --- Tegaki wordmark enhancement ---
-(async function () {
-  const wordmark = document.querySelector('.logo-wordmark');
-  if (!wordmark) return;
-
-  try {
-    const tegaki = await import('https://esm.sh/tegaki@0.13.0/wc');
-    const fontModule = await import('https://esm.sh/tegaki@0.13.0/fonts/caveat');
-    const bundle = fontModule.default;
-    const text = (wordmark.textContent || 'priyansu s.').trim();
-
-    tegaki.TegakiEngine.registerBundle(bundle);
-    tegaki.registerTegakiElement();
-
-    const el = document.createElement('tegaki-renderer');
-    el.setAttribute('font', bundle.family);
-    el.setAttribute('text', text);
-    el.setAttribute('aria-label', text);
-    el.className = 'logo-wordmark logo-wordmark--tegaki';
-    wordmark.replaceWith(el);
-  } catch (e) {
-    // Keep the static wordmark as a readable fallback.
-  }
-})();
-
-// --- Lightbox with prev/next ---
+// --- Lightbox with prev/next + keyboard/focus management ---
 (function () {
   const lightbox = document.getElementById('lightbox');
   if (!lightbox) return; // guard — not all pages have a lightbox
@@ -82,29 +57,48 @@
 
   const items = Array.from(document.querySelectorAll('[data-lightbox]'));
   let currentIndex = -1;
+  let lastFocus = null;
 
   function openLightbox(index) {
     const item = items[index];
     const img = item.querySelector('img');
     if (!img) return;
+    if (currentIndex === -1) lastFocus = document.activeElement;
     currentIndex = index;
     lightboxImg.src = img.src;
     lightboxImg.alt = img.alt || 'Photograph';
     lightbox.classList.add('active');
     document.body.style.overflow = 'hidden';
     updateNav();
+    requestAnimationFrame(function () {
+      if (closeBtn) closeBtn.focus();
+    });
   }
 
   function closeLightbox() {
     lightbox.classList.remove('active');
     document.body.style.overflow = '';
-    setTimeout(() => { lightboxImg.src = ''; }, 300);
+    setTimeout(function () { lightboxImg.src = ''; }, 300);
     currentIndex = -1;
+    if (lastFocus && typeof lastFocus.focus === 'function') {
+      lastFocus.focus();
+    }
+    lastFocus = null;
   }
 
   function updateNav() {
-    if (prevBtn) prevBtn.style.opacity = currentIndex > 0 ? '1' : '0.2';
-    if (nextBtn) nextBtn.style.opacity = currentIndex < items.length - 1 ? '1' : '0.2';
+    const atStart = currentIndex <= 0;
+    const atEnd   = currentIndex >= items.length - 1;
+    if (prevBtn) {
+      prevBtn.style.opacity = atStart ? '0.2' : '1';
+      prevBtn.disabled = atStart;
+      prevBtn.setAttribute('aria-disabled', atStart ? 'true' : 'false');
+    }
+    if (nextBtn) {
+      nextBtn.style.opacity = atEnd ? '0.2' : '1';
+      nextBtn.disabled = atEnd;
+      nextBtn.setAttribute('aria-disabled', atEnd ? 'true' : 'false');
+    }
     if (counter) counter.textContent = items.length > 1 ? (currentIndex + 1) + ' / ' + items.length : '';
   }
 
@@ -117,10 +111,25 @@
   }
 
   items.forEach(function (item, index) {
+    if (!item.hasAttribute('tabindex')) item.setAttribute('tabindex', '0');
+    if (!item.hasAttribute('role'))     item.setAttribute('role', 'button');
+    if (!item.hasAttribute('aria-label')) {
+      const img = item.querySelector('img');
+      const alt = img && img.alt ? img.alt : 'photograph';
+      item.setAttribute('aria-label', 'View ' + alt + ' full size');
+    }
     item.addEventListener('click', function () {
       const img = item.querySelector('img');
       if (!img) return;
       openLightbox(index);
+    });
+    item.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const img = item.querySelector('img');
+        if (!img) return;
+        openLightbox(index);
+      }
     });
   });
 
@@ -129,24 +138,28 @@
   });
 
   closeBtn && closeBtn.addEventListener('click', closeLightbox);
-  prevBtn && prevBtn.addEventListener('click', function(e) { e.stopPropagation(); showPrev(); });
-  nextBtn && nextBtn.addEventListener('click', function(e) { e.stopPropagation(); showNext(); });
+  prevBtn  && prevBtn.addEventListener('click',  function (e) { e.stopPropagation(); showPrev(); });
+  nextBtn  && nextBtn.addEventListener('click',  function (e) { e.stopPropagation(); showNext(); });
 
   document.addEventListener('keydown', function (e) {
     if (!lightbox.classList.contains('active')) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowLeft') showPrev();
-    if (e.key === 'ArrowRight') showNext();
-  });
-})();
-
-// --- Smooth scroll for nav links ---
-document.querySelectorAll('a[href^="#"]').forEach(function (link) {
-  link.addEventListener('click', function (e) {
-    const target = document.querySelector(this.getAttribute('href'));
-    if (target) {
-      e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (e.key === 'Escape')     { closeLightbox(); return; }
+    if (e.key === 'ArrowLeft')  { showPrev(); return; }
+    if (e.key === 'ArrowRight') { showNext(); return; }
+    if (e.key === 'Tab') {
+      const focusable = [closeBtn, prevBtn, nextBtn].filter(function (b) {
+        return b && !b.disabled;
+      });
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last  = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault(); last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault(); first.focus();
+      } else if (focusable.indexOf(document.activeElement) === -1) {
+        e.preventDefault(); first.focus();
+      }
     }
   });
-});
+})();

@@ -3,34 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- @partial:meta -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://api.fontshare.com; font-src 'self' https://api.fontshare.com https://cdn.fontshare.com; script-src 'self' 'unsafe-inline'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
+  <!-- @end -->
   <title>priyansu.s &mdash; gallery</title>
   <meta name="description" content="Full photo gallery &mdash; landscape and travel photography by priyansu s.">
 
   <!-- Open Graph -->
   <meta property="og:title" content="priyansu.s">
   <meta property="og:description" content="Photography by priyansu s. &mdash; landscapes, travel, and street.">
-  <meta property="og:image" content="https://priyansu-sahu.github.io/photography-portfolio/assets/og-image.png">
+  <meta property="og:image" content="https://priontherun.com/assets/og-image.png">
   <meta property="og:type" content="website">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="priyansu.s">
   <meta name="twitter:description" content="Photography by priyansu s.">
-  <meta name="twitter:image" content="https://priyansu-sahu.github.io/photography-portfolio/assets/og-image.png">
+  <meta name="twitter:image" content="https://priontherun.com/assets/og-image.png">
 
   <link rel="icon" type="image/png" href="../assets/favicon.png">
   <link rel="shortcut icon" href="../assets/favicon.ico">
   <link rel="apple-touch-icon" href="../assets/favicon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="../base.css">
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="../gallery.css">
 
+  <!-- @partial:theme-bootstrap -->
   <script>
     (function(){
       var d=document.documentElement;
@@ -43,10 +46,11 @@
       }
     })();
   </script>
+  <!-- @end -->
 </head>
 <body>
 
-  <a href="#main" class="sr-only" style="position:absolute;top:0;left:0;z-index:200;padding:1rem;background:var(--color-bg);color:var(--color-text);">Skip to content</a>
+  <a href="#main" class="skip-link">Skip to content</a>
 
   <div class="site-wrapper">
 
@@ -57,12 +61,12 @@
           <circle cx="24" cy="24" r="13" stroke="currentColor" stroke-width="0.75" opacity="0.55"/>
           <text x="24" y="29" text-anchor="middle" dominant-baseline="auto" font-family="'Crimson Pro', Georgia, serif" font-style="italic" font-size="16" font-weight="300" fill="currentColor" stroke="none">p</text>
         </svg>
-        <span class="logo-wordmark">priyansu s.</span>
+        <svg class="logo-wordmark" aria-label="priyansu s." role="img" viewBox="0 0 120 28" preserveAspectRatio="xMinYMid meet" xmlns="http://www.w3.org/2000/svg"><text x="0" y="22" fill="currentColor" font-family="'Caveat', 'Brush Script MT', cursive" font-size="22" font-weight="500">priyansu s.</text></svg>
       </a>
 
       <nav class="header-nav" aria-label="Primary">
         <a href="../gallery/index.html" class="nav-link" aria-current="page">gallery</a>
-        <a href="../blog/index.html" class="nav-link">writing</a>
+        <a href="../writing/index.html" class="nav-link">writing</a>
         <button class="theme-toggle" data-theme-toggle aria-label="Switch to dark mode">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <circle cx="12" cy="12" r="5"/>
@@ -82,143 +86,159 @@
         </div>
 
         <div class="gallery-item reveal" data-lightbox>
-          <picture><source srcset="../assets/R0001838.webp" type="image/webp"><img src="../assets/R0001838.jpg" alt="south downs" loading="eager" decoding="sync" width="1600" height="1067"></picture>
+          <picture><source srcset="../assets/R0001838.webp" type="image/webp"><img src="../assets/R0001838.jpg" alt="south downs" loading="lazy" decoding="sync" width="1600" height="1067"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">02</span> south downs <span class="gallery-caption-loc">england</span></div>
         </div>
 
         <div class="gallery-item reveal" data-lightbox>
-          <picture><source srcset="../assets/R0001848.webp" type="image/webp"><img src="../assets/R0001848.jpg" alt="beachy head" loading="eager" decoding="sync" width="1600" height="1067"></picture>
+          <picture><source srcset="../assets/R0001848.webp" type="image/webp"><img src="../assets/R0001848.jpg" alt="beachy head" loading="lazy" decoding="sync" width="1600" height="1067"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">03</span> beachy head <span class="gallery-caption-loc">england</span></div>
         </div>
 
         <div class="gallery-item reveal" data-lightbox>
-          <picture><source srcset="../assets/R0001851.webp" type="image/webp"><img src="../assets/R0001851.jpg" alt="seven sisters" loading="eager" decoding="sync" width="1600" height="1067"></picture>
+          <picture><source srcset="../assets/R0001851.webp" type="image/webp"><img src="../assets/R0001851.jpg" alt="seven sisters" loading="lazy" decoding="sync" width="1600" height="1067"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">04</span> seven sisters <span class="gallery-caption-loc">england</span></div>
         </div>
 
         <div class="gallery-item reveal" data-lightbox>
-          <picture><source srcset="../assets/R0001999.webp" type="image/webp"><img src="../assets/R0001999.jpg" alt="louvre" loading="eager" decoding="async" width="1600" height="1067"></picture>
+          <picture><source srcset="../assets/R0001999.webp" type="image/webp"><img src="../assets/R0001999.jpg" alt="louvre" loading="lazy" decoding="async" width="1600" height="1067"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">05</span> louvre <span class="gallery-caption-loc">paris</span></div>
         </div>
 
         <div class="gallery-item reveal" data-lightbox>
-          <picture><source srcset="../assets/R0002069.webp" type="image/webp"><img src="../assets/R0002069.jpg" alt="seine" loading="eager" decoding="async" width="1600" height="1067"></picture>
+          <picture><source srcset="../assets/R0002069.webp" type="image/webp"><img src="../assets/R0002069.jpg" alt="seine" loading="lazy" decoding="async" width="1600" height="1067"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">06</span> seine <span class="gallery-caption-loc">paris</span></div>
         </div>
 
         <div class="gallery-item reveal" data-lightbox>
-          <picture><source srcset="../assets/R0001739.webp" type="image/webp"><img src="../assets/R0001739.jpg" alt="london eye" loading="eager" decoding="async" width="1600" height="1067"></picture>
+          <picture><source srcset="../assets/R0001739.webp" type="image/webp"><img src="../assets/R0001739.jpg" alt="london eye" loading="lazy" decoding="async" width="1600" height="1067"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">07</span> london eye <span class="gallery-caption-loc">london</span></div>
         </div>
 
         <div class="gallery-item gallery-item--portrait reveal" data-lightbox>
-          <picture><source srcset="../assets/R0002017.webp" type="image/webp"><img src="../assets/R0002017.jpg" alt="paris at night" loading="eager" decoding="async" width="897" height="1345"></picture>
+          <picture><source srcset="../assets/R0002017.webp" type="image/webp"><img src="../assets/R0002017.jpg" alt="paris at night" loading="lazy" decoding="async" width="897" height="1345"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">08</span> paris at night <span class="gallery-caption-loc">paris</span></div>
         </div>
 
         <div class="gallery-item reveal" data-lightbox>
-          <picture><source srcset="../assets/R0001812.webp" type="image/webp"><img src="../assets/R0001812.jpg" alt="portobello road" loading="eager" decoding="async" width="1600" height="1067"></picture>
+          <picture><source srcset="../assets/R0001812.webp" type="image/webp"><img src="../assets/R0001812.jpg" alt="portobello road" loading="lazy" decoding="async" width="1600" height="1067"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">09</span> portobello road <span class="gallery-caption-loc">london</span></div>
         </div>
 
         <div class="gallery-item gallery-item--portrait reveal" data-lightbox>
-          <picture><source srcset="../assets/R0002108.webp" type="image/webp"><img src="../assets/R0002108.jpg" alt="le duc" loading="eager" decoding="async" width="897" height="1345"></picture>
+          <picture><source srcset="../assets/R0002108.webp" type="image/webp"><img src="../assets/R0002108.jpg" alt="le duc" loading="lazy" decoding="async" width="897" height="1345"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">10</span> le duc <span class="gallery-caption-loc">paris</span></div>
         </div>
 
         <div class="gallery-item reveal" data-lightbox>
-          <picture><source srcset="../assets/R0002077.webp" type="image/webp"><img src="../assets/R0002077.jpg" alt="tuileries" loading="eager" decoding="async" width="1600" height="1067"></picture>
+          <picture><source srcset="../assets/R0002077.webp" type="image/webp"><img src="../assets/R0002077.jpg" alt="tuileries" loading="lazy" decoding="async" width="1600" height="1067"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">11</span> tuileries <span class="gallery-caption-loc">paris</span></div>
         </div>
 
         <div class="gallery-item reveal" data-lightbox>
-          <picture><source srcset="../assets/R0001944.webp" type="image/webp"><img src="../assets/R0001944.jpg" alt="mus&eacute;e d'orsay" loading="eager" decoding="async" width="1600" height="1067"></picture>
+          <picture><source srcset="../assets/R0001944.webp" type="image/webp"><img src="../assets/R0001944.jpg" alt="mus&eacute;e d'orsay" loading="lazy" decoding="async" width="1600" height="1067"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">12</span> mus&eacute;e d'orsay <span class="gallery-caption-loc">paris</span></div>
         </div>
 
         <div class="gallery-item reveal" data-lightbox>
-          <picture><source srcset="../assets/R0001957.webp" type="image/webp"><img src="../assets/R0001957.jpg" alt="orsay window" loading="eager" decoding="async" width="1600" height="1067"></picture>
+          <picture><source srcset="../assets/R0001957.webp" type="image/webp"><img src="../assets/R0001957.jpg" alt="orsay window" loading="lazy" decoding="async" width="1600" height="1067"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">13</span> orsay window <span class="gallery-caption-loc">paris</span></div>
         </div>
 
         <div class="gallery-item reveal" data-lightbox>
-          <picture><source srcset="../assets/R0002119.webp" type="image/webp"><img src="../assets/R0002119.jpg" alt="tower bridge" loading="eager" decoding="async" width="1600" height="1067"></picture>
+          <picture><source srcset="../assets/R0002119.webp" type="image/webp"><img src="../assets/R0002119.jpg" alt="tower bridge" loading="lazy" decoding="async" width="1600" height="1067"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">14</span> tower bridge <span class="gallery-caption-loc">london</span></div>
         </div>
 
         <div class="gallery-item gallery-item--portrait reveal" data-lightbox>
-          <picture><img src="../assets/R0000407.jpg" alt="sunlit lane in japan" loading="eager" decoding="async" width="1067" height="1600"></picture>
+          <picture><source srcset="../assets/R0000407.webp" type="image/webp"><img src="../assets/R0000407.jpg" alt="sunlit lane in japan" loading="lazy" decoding="async" width="1067" height="1600"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">15</span> sunlit lane <span class="gallery-caption-loc">japan</span></div>
         </div>
 
         <div class="gallery-item reveal" data-lightbox>
-          <picture><img src="../assets/R0000415.jpg" alt="building entrance in japan" loading="eager" decoding="async" width="1600" height="1067"></picture>
+          <picture><source srcset="../assets/R0000415.webp" type="image/webp"><img src="../assets/R0000415.jpg" alt="building entrance in japan" loading="lazy" decoding="async" width="1600" height="1067"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">16</span> winter entrance <span class="gallery-caption-loc">japan</span></div>
         </div>
 
         <div class="gallery-item gallery-item--portrait reveal" data-lightbox>
-          <picture><img src="../assets/R0000630.jpg" alt="shopfront in japan" loading="eager" decoding="async" width="1067" height="1600"></picture>
+          <picture><source srcset="../assets/R0000630.webp" type="image/webp"><img src="../assets/R0000630.jpg" alt="shopfront in japan" loading="lazy" decoding="async" width="1067" height="1600"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">17</span> shopfront <span class="gallery-caption-loc">japan</span></div>
         </div>
 
         <div class="gallery-item gallery-item--portrait reveal" data-lightbox>
-          <picture><img src="../assets/R0000631.jpg" alt="skytree view in japan" loading="eager" decoding="async" width="1067" height="1600"></picture>
+          <picture><source srcset="../assets/R0000631.webp" type="image/webp"><img src="../assets/R0000631.jpg" alt="skytree view in japan" loading="lazy" decoding="async" width="1067" height="1600"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">18</span> skytree view <span class="gallery-caption-loc">japan</span></div>
         </div>
 
         <div class="gallery-item reveal" data-lightbox>
-          <picture><img src="../assets/R0000645.jpg" alt="rickshaw on a japan street" loading="eager" decoding="async" width="1600" height="1067"></picture>
+          <picture><source srcset="../assets/R0000645.webp" type="image/webp"><img src="../assets/R0000645.jpg" alt="rickshaw on a japan street" loading="lazy" decoding="async" width="1600" height="1067"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">19</span> rickshaw crossing <span class="gallery-caption-loc">japan</span></div>
         </div>
 
         <div class="gallery-item reveal" data-lightbox>
-          <picture><img src="../assets/R0000763.jpg" alt="city avenue in japan" loading="eager" decoding="async" width="1600" height="1067"></picture>
+          <picture><source srcset="../assets/R0000763.webp" type="image/webp"><img src="../assets/R0000763.jpg" alt="city avenue in japan" loading="lazy" decoding="async" width="1600" height="1067"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">20</span> city avenue <span class="gallery-caption-loc">japan</span></div>
         </div>
 
         <div class="gallery-item gallery-item--portrait reveal" data-lightbox>
-          <picture><img src="../assets/R0000863.jpg" alt="restaurant counter in japan" loading="eager" decoding="async" width="1067" height="1600"></picture>
+          <picture><source srcset="../assets/R0000863.webp" type="image/webp"><img src="../assets/R0000863.jpg" alt="restaurant counter in japan" loading="lazy" decoding="async" width="1067" height="1600"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">21</span> counter light <span class="gallery-caption-loc">japan</span></div>
         </div>
 
         <div class="gallery-item gallery-item--portrait reveal" data-lightbox>
-          <picture><img src="../assets/R0000891.jpg" alt="shrine at night in japan" loading="eager" decoding="async" width="1067" height="1600"></picture>
+          <picture><source srcset="../assets/R0000891.webp" type="image/webp"><img src="../assets/R0000891.jpg" alt="shrine at night in japan" loading="lazy" decoding="async" width="1067" height="1600"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">22</span> shrine at night <span class="gallery-caption-loc">japan</span></div>
         </div>
 
         <div class="gallery-item reveal" data-lightbox>
-          <picture><img src="../assets/R0000908.jpg" alt="street corner in japan" loading="eager" decoding="async" width="1600" height="1067"></picture>
+          <picture><source srcset="../assets/R0000908.webp" type="image/webp"><img src="../assets/R0000908.jpg" alt="street corner in japan" loading="lazy" decoding="async" width="1600" height="1067"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">23</span> street corner <span class="gallery-caption-loc">japan</span></div>
         </div>
 
         <div class="gallery-item reveal" data-lightbox>
-          <picture><img src="../assets/R0001115.jpg" alt="garden pond in japan" loading="eager" decoding="async" width="1600" height="1067"></picture>
+          <picture><source srcset="../assets/R0001115.webp" type="image/webp"><img src="../assets/R0001115.jpg" alt="garden pond in japan" loading="lazy" decoding="async" width="1600" height="1067"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">24</span> garden pond <span class="gallery-caption-loc">japan</span></div>
         </div>
 
         <div class="gallery-item reveal" data-lightbox>
-          <picture><img src="../assets/R0001439.jpg" alt="temple terrace in japan" loading="eager" decoding="async" width="1600" height="1067"></picture>
+          <picture><source srcset="../assets/R0001439.webp" type="image/webp"><img src="../assets/R0001439.jpg" alt="temple terrace in japan" loading="lazy" decoding="async" width="1600" height="1067"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">25</span> temple terrace <span class="gallery-caption-loc">japan</span></div>
         </div>
 
         <div class="gallery-item gallery-item--portrait reveal" data-lightbox>
-          <picture><img src="../assets/R0001448.jpg" alt="pine loop in japan" loading="eager" decoding="async" width="1067" height="1600"></picture>
+          <picture><source srcset="../assets/R0001448.webp" type="image/webp"><img src="../assets/R0001448.jpg" alt="pine loop in japan" loading="lazy" decoding="async" width="1067" height="1600"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">26</span> pine loop <span class="gallery-caption-loc">japan</span></div>
         </div>
 
         <div class="gallery-item gallery-item--portrait reveal" data-lightbox>
-          <picture><img src="../assets/R0001664.jpg" alt="old lane in japan" loading="eager" decoding="async" width="1067" height="1600"></picture>
+          <picture><source srcset="../assets/R0001664.webp" type="image/webp"><img src="../assets/R0001664.jpg" alt="old lane in japan" loading="lazy" decoding="async" width="1067" height="1600"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">27</span> old lane <span class="gallery-caption-loc">japan</span></div>
         </div>
 
         <div class="gallery-item reveal" data-lightbox>
-          <picture><img src="../assets/R0001680.jpg" alt="coastal road in japan" loading="eager" decoding="async" width="1600" height="1067"></picture>
+          <picture><source srcset="../assets/R0001680.webp" type="image/webp"><img src="../assets/R0001680.jpg" alt="coastal road in japan" loading="lazy" decoding="async" width="1600" height="1067"></picture>
           <div class="gallery-caption"><span class="gallery-caption-num">28</span> coastal road <span class="gallery-caption-loc">japan</span></div>
         </div>
 
       </section>
 
     </main>
+
+    <!-- @partial:footer -->
+    <footer class="site-footer">
+      <div class="footer-rail" aria-hidden="true">✦</div>
+      <div class="footer-content">
+        <div class="footer-line">
+          <span>© priyansu s.</span>
+          <span class="dot" aria-hidden="true">·</span>
+          <span>2026</span>
+        </div>
+        <div class="footer-colophon">
+          built and photographed by priyansu
+        </div>
+      </div>
+    </footer>
+    <!-- @end -->
 
   </div>
 

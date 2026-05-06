@@ -108,7 +108,7 @@
 
 .article-title {
   font-family: var(--font-display);
-  font-size: var(--text-xl);
+  font-size: var(--text-2xl);
   font-weight: 300;
   letter-spacing: 0.02em;
   line-height: 1.2;
@@ -139,7 +139,7 @@
 }
 
 .article-content p + p {
-  margin-top: var(--space-6);
+  margin-top: var(--space-8);
 }
 
 .article-content p:first-child::first-letter {
@@ -148,6 +148,18 @@
   float: left;
   margin-right: 0.08em;
   margin-top: 0.05em;
-  font-weight: 300;
+  font-weight: 400;
+  font-style: italic;
   font-family: var(--font-display);
+}
+
+.article-ledger {
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  letter-spacing: 0.06em;
+  padding-top: 0.4em;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
 }

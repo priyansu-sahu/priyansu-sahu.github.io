@@ -1,0 +1,19 @@
+{
+  "name": "priyansu-sahu.github.io",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal website (priontherun.com).",
+  "scripts": {
+    "og": "node generate-og.js",
+    "sync": "node scripts/sync-partials.js",
+    "webp": "node scripts/generate-webp.js",
+    "wordmark": "node scripts/build-wordmark.js",
+    "fonts": "node scripts/copy-fonts.js"
+  },
+  "devDependencies": {
+    "@fontsource/caveat": "^5.0.0",
+    "@fontsource/crimson-pro": "^5.0.0",
+    "opentype.js": "^1.3.4",
+    "sharp": "^0.33.0"
+  }
+}

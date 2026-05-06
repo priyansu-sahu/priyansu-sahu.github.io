@@ -47,7 +47,6 @@
   --color-text-muted:  #6e6b64;
   --color-text-faint:  #767370;
   --color-accent:      #5b3b40;
-  --color-accent-hover:#4a2d32;
   --color-border:      #d4d0c8;
   --color-divider:     #e2dfd8;
 }
@@ -60,7 +59,6 @@
   --color-text-muted:  #8a8882;
   --color-text-faint:  #777471;
   --color-accent:      #d4b896;
-  --color-accent-hover:#e3cba9;
   --color-border:      #3d3c38;
   --color-divider:     #2a2926;
 }
@@ -73,7 +71,6 @@
     --color-text-muted:  #8a8882;
     --color-text-faint:  #777471;
     --color-accent:      #d4b896;
-    --color-accent-hover:#e3cba9;
     --color-border:      #3d3c38;
     --color-divider:     #2a2926;
   }
@@ -87,7 +84,6 @@ body {
   font-family: var(--font-body);
   font-size: var(--text-base);
   line-height: 1.7;
-  letter-spacing: 0.01em;
 }
 
 .site-wrapper {
@@ -148,15 +144,18 @@ body {
   white-space: nowrap;
 }
 
-.logo-wordmark--tegaki {
+svg.logo-wordmark {
   display: inline-block;
-  min-width: 7rem;
-  color: var(--color-text);
-  font-size: var(--text-lg);
-  line-height: 1;
+  height: 1.5rem;
+  width: auto;
+  vertical-align: middle;
+  font-family: 'Caveat', 'Brush Script MT', cursive;
+  font-style: normal;
+  font-weight: 500;
   letter-spacing: 0;
   text-transform: none;
-  vertical-align: middle;
+  white-space: normal;
+  overflow: visible;
 }
 
 .header-nav {
@@ -406,28 +405,6 @@ body {
   transform: scale(1.03);
 }
 
-/* Placeholder state — shown when no real image is loaded */
-.gallery-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-3);
-  color: var(--color-text-faint);
-  font-family: var(--font-label);
-  font-size: var(--text-xs);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.gallery-placeholder svg {
-  width: 32px;
-  height: 32px;
-  opacity: 0.4;
-}
-
 /* Caption overlay on hover */
 .gallery-caption {
   position: absolute;
@@ -475,42 +452,6 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-/* ============================================================
-   FEATURED IMAGE — Full-width break
-   ============================================================ */
-
-.featured-image {
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
-  aspect-ratio: 21 / 9;
-  background: var(--color-surface);
-  border-top: 1px solid var(--color-divider);
-  border-bottom: 1px solid var(--color-divider);
-  overflow: hidden;
-  position: relative;
-}
-
-.featured-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.featured-image .featured-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-3);
-  color: var(--color-text-faint);
-  font-family: var(--font-label);
-  font-size: var(--text-sm);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
 }
 
 /* ============================================================
@@ -752,31 +693,44 @@ body {
 
 @keyframes reveal-fade { to { opacity: 1; } }
 
-.gallery-item:nth-child(2) { animation-delay: 60ms; }
-.gallery-item:nth-child(3) { animation-delay: 120ms; }
-.gallery-item:nth-child(4) { animation-delay: 180ms; }
-.gallery-item:nth-child(5) { animation-delay: 240ms; }
-.gallery-item:nth-child(6) { animation-delay: 300ms; }
-.gallery-item:nth-child(7) { animation-delay: 360ms; }
-.gallery-item:nth-child(8) { animation-delay: 420ms; }
-.gallery-item:nth-child(9) { animation-delay: 480ms; }
-.gallery-item:nth-child(10) { animation-delay: 540ms; }
-.gallery-item:nth-child(11) { animation-delay: 600ms; }
-.gallery-item:nth-child(12) { animation-delay: 660ms; }
-
 .gallery-grid--editorial .reveal {
   opacity: 1;
   animation: none;
 }
 
 /* ============================================================
-   DECORATIVE — Oxidist star bullets
+   BUTTONS — used by tool pages
    ============================================================ */
 
-.star-bullet::before {
-  content: '✧';
-  margin-right: var(--space-3);
-  color: var(--color-text-faint);
+.diff-btn {
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  padding: var(--space-2) var(--space-5);
+  border: 1px solid var(--color-text);
+  background: var(--color-text);
+  color: var(--color-bg);
+  cursor: pointer;
+  transition: background 180ms, color 180ms, border-color 180ms;
+  border-radius: 1px;
+}
+
+.diff-btn:hover {
+  background: var(--color-text-muted);
+  border-color: var(--color-text-muted);
+}
+
+.diff-btn--ghost {
+  background: transparent;
+  color: var(--color-text-muted);
+  border-color: var(--color-border);
+}
+
+.diff-btn--ghost:hover {
+  background: transparent;
+  color: var(--color-text);
+  border-color: var(--color-text-muted);
 }
 
 /* ============================================================
@@ -807,9 +761,5 @@ body {
 
   .footer-line {
     flex-wrap: wrap;
-  }
-
-  .featured-image {
-    aspect-ratio: 16 / 9;
   }
 }

@@ -1,5 +1,6 @@
 const { createCanvas } = require('canvas');
 const fs = require('fs');
+const path = require('path');
 
 const W = 1200, H = 630;
 const canvas = createCanvas(W, H);
@@ -69,5 +70,5 @@ ctx.fillText('p', cx, cy + 26);
 
 // Save
 const buf = canvas.toBuffer('image/png');
-fs.writeFileSync('/home/user/workspace/portfolio/assets/og-image.png', buf);
+fs.writeFileSync(path.join(__dirname, 'assets', 'og-image.png'), buf);
 console.log('OG image saved');

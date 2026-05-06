@@ -1,0 +1,12 @@
+<script>
+  (function(){
+    var d=document.documentElement;
+    try{
+      var saved=localStorage.getItem('theme');
+      if(saved==='light'||saved==='dark') d.setAttribute('data-theme',saved);
+      else if(matchMedia('(prefers-color-scheme:dark)').matches) d.setAttribute('data-theme','dark');
+    }catch(e){
+      if(matchMedia('(prefers-color-scheme:dark)').matches) d.setAttribute('data-theme','dark');
+    }
+  })();
+</script>
