@@ -12,7 +12,7 @@ const TARGETS = [
   'index.html',
   'gallery/index.html',
   'writing/index.html',
-  'writing/on-looking-slowly/index.html',
+  'writing/6-days/index.html',
   'tools/index.html',
   'tools/diff/index.html',
   'tools/wordcount/index.html',
