@@ -780,7 +780,9 @@ svg.logo-wordmark {
   }
   .gallery-grid--editorial .see-more-link {
     column-span: all;
-    margin-top: var(--space-2);
+    display: block;
+    width: max-content;
+    margin-top: var(--space-4);
   }
 }
 @media (min-width: 960px) {
