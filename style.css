@@ -431,14 +431,6 @@ svg.logo-wordmark {
   transform: translateY(0);
 }
 
-.gallery-caption-num {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: var(--text-sm);
-  opacity: 0.85;
-  letter-spacing: 0;
-}
-
 .gallery-caption-loc {
   margin-left: auto;
   opacity: 0.7;
