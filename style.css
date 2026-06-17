@@ -755,3 +755,36 @@ svg.logo-wordmark {
     flex-wrap: wrap;
   }
 }
+
+
+/* ============================================================
+   HOME GALLERY — balanced masonry (full, uncropped frames)
+   Overrides the earlier uniform 3:2 editorial grid. Home-only.
+   ============================================================ */
+.gallery-grid--editorial .gallery-item {
+  aspect-ratio: auto;          /* show the whole frame, no crop */
+}
+.gallery-grid--editorial .gallery-item picture,
+.gallery-grid--editorial .gallery-item img {
+  height: auto;                /* natural height */
+}
+@media (min-width: 640px) {
+  .gallery-grid--editorial {
+    display: block;            /* multicol masonry instead of grid */
+    column-count: 2;
+    column-gap: var(--space-4);
+  }
+  .gallery-grid--editorial .gallery-item {
+    break-inside: avoid;
+    margin: 0 0 var(--space-4);
+  }
+  .gallery-grid--editorial .see-more-link {
+    column-span: all;
+    margin-top: var(--space-2);
+  }
+}
+@media (min-width: 960px) {
+  .gallery-grid--editorial {
+    column-count: 3;
+  }
+}
