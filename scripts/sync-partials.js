@@ -10,6 +10,7 @@ const ROOT = path.join(__dirname, '..');
 const PARTIALS_DIR = path.join(ROOT, '_partials');
 const TARGETS = [
   'index.html',
+  'quotes/index.html',
   'gallery/index.html',
   'writing/index.html',
   'writing/6-days/index.html',

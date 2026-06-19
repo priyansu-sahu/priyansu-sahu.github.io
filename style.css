@@ -527,8 +527,6 @@ svg.logo-wordmark {
    ============================================================ */
 
 .site-footer {
-  display: grid;
-  gap: var(--space-6);
   padding-block: var(--space-10);
   border-top: 1px solid var(--color-divider);
   margin-top: var(--space-8);
@@ -538,48 +536,16 @@ svg.logo-wordmark {
   letter-spacing: 0.08em;
 }
 
-@media (min-width: 768px) {
-  .site-footer {
-    grid-template-columns: 160px 1fr;
-    gap: var(--space-12);
-    align-items: baseline;
-  }
+.footer-credit {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
 }
 
-.footer-rail {
+.footer-mark {
   font-family: var(--font-display);
-  color: var(--color-text-muted);
   font-size: var(--text-lg);
-  text-align: left;
-}
-
-@media (min-width: 768px) {
-  .footer-rail { text-align: right; }
-}
-
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--space-4);
-}
-
-.footer-line {
-  display: flex;
-  align-items: center;
-}
-
-.footer-colophon {
-  color: var(--color-text-faint);
-  font-family: var(--font-label);
-  letter-spacing: 0.06em;
-  font-size: var(--text-xs);
-}
-
-/* shared utility used by the footer's middle dot */
-.dot {
-  color: var(--color-text-faint);
-  padding-inline: 0.4em;
+  color: var(--color-text-muted);
 }
 
 
@@ -744,15 +710,6 @@ svg.logo-wordmark {
 
   .section-row {
     padding-block: var(--space-8);
-  }
-
-  .footer-content {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .footer-line {
-    flex-wrap: wrap;
   }
 }
 

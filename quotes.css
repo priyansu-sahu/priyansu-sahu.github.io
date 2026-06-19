@@ -1,0 +1,68 @@
+/* Quotes — "some quotes I live by" */
+
+.quotes-header {
+  padding-block: var(--space-12) var(--space-8);
+  display: grid;
+  gap: var(--space-3);
+}
+
+.quotes-header h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: var(--color-text);
+}
+
+.quotes-subtitle {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  letter-spacing: 0.01em;
+}
+
+.quote-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 var(--space-20);
+}
+
+.quote {
+  border-top: 1px solid var(--color-divider);
+  padding-block: var(--space-8);
+  margin: 0;
+  display: grid;
+  gap: var(--space-4);
+  max-width: 62ch;
+}
+
+.quote:last-child {
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.quote p {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--color-text);
+  text-wrap: balance;
+}
+
+.quote cite {
+  font-family: var(--font-label);
+  font-style: normal;
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  color: var(--color-text-faint);
+}
+
+.quote cite::before {
+  content: "\2014\00a0";
+}
