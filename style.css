@@ -536,18 +536,6 @@ svg.logo-wordmark {
   letter-spacing: 0.08em;
 }
 
-.footer-credit {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-3);
-}
-
-.footer-mark {
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  color: var(--color-text-muted);
-}
-
 
 /* ============================================================
    LIGHTBOX
