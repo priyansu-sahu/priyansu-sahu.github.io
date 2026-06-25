@@ -87,8 +87,10 @@
   }
 
   function updateNav() {
-    const atStart = currentIndex <= 0;
-    const atEnd   = currentIndex >= items.length - 1;
+    const visible = items.filter(isVisible);
+    const pos = visible.indexOf(items[currentIndex]);
+    const atStart = pos <= 0;
+    const atEnd   = pos >= visible.length - 1;
     if (prevBtn) {
       prevBtn.style.opacity = atStart ? '0.2' : '1';
       prevBtn.disabled = atStart;
@@ -99,15 +101,23 @@
       nextBtn.disabled = atEnd;
       nextBtn.setAttribute('aria-disabled', atEnd ? 'true' : 'false');
     }
-    if (counter) counter.textContent = items.length > 1 ? (currentIndex + 1) + ' / ' + items.length : '';
+    if (counter) counter.textContent = visible.length > 1 ? (pos + 1) + ' / ' + visible.length : '';
+  }
+
+  function isVisible(item) {
+    return !item.classList.contains('gallery-hidden');
   }
 
   function showPrev() {
-    if (currentIndex > 0) openLightbox(currentIndex - 1);
+    for (var i = currentIndex - 1; i >= 0; i--) {
+      if (isVisible(items[i])) { openLightbox(i); return; }
+    }
   }
 
   function showNext() {
-    if (currentIndex < items.length - 1) openLightbox(currentIndex + 1);
+    for (var i = currentIndex + 1; i < items.length; i++) {
+      if (isVisible(items[i])) { openLightbox(i); return; }
+    }
   }
 
   items.forEach(function (item, index) {
@@ -162,4 +172,37 @@
       }
     }
   });
+})();
+
+
+// --- Gallery location filter ---
+(function () {
+  const bar = document.querySelector('.gallery-filter');
+  if (!bar) return;
+  const chips = Array.from(bar.querySelectorAll('[data-filter]'));
+  const items = Array.from(document.querySelectorAll('.gallery-full .gallery-item'));
+
+  function apply(loc, push) {
+    items.forEach(function (it) {
+      const show = loc === 'all' || it.getAttribute('data-loc') === loc;
+      it.classList.toggle('gallery-hidden', !show);
+    });
+    chips.forEach(function (c) {
+      const active = c.getAttribute('data-filter') === loc;
+      c.classList.toggle('is-active', active);
+      c.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    if (push !== false) {
+      if (loc === 'all') history.replaceState(null, '', location.pathname + location.search);
+      else history.replaceState(null, '', '#' + loc.replace(/ /g, '-'));
+    }
+  }
+
+  chips.forEach(function (c) {
+    c.addEventListener('click', function () { apply(c.getAttribute('data-filter'), true); });
+  });
+
+  var initial = decodeURIComponent((location.hash || '').replace('#', '')).replace(/-/g, ' ');
+  if (!chips.some(function (c) { return c.getAttribute('data-filter') === initial; })) initial = 'all';
+  apply(initial, false);
 })();

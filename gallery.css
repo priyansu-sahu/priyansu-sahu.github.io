@@ -46,3 +46,42 @@
   height: 100%;
   object-fit: cover;
 }
+
+
+/* ============================================================
+   LOCATION FILTER
+   ============================================================ */
+.gallery-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-4);
+  padding-top: var(--space-8);
+}
+
+.filter-chip {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: lowercase;
+  color: var(--color-text-faint);
+  transition: color 200ms;
+}
+
+.filter-chip:hover {
+  color: var(--color-text-muted);
+}
+
+.filter-chip.is-active {
+  color: var(--color-text);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.gallery-item.gallery-hidden {
+  display: none;
+}
