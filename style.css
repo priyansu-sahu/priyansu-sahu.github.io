@@ -773,3 +773,39 @@ svg.logo-wordmark {
   .gallery-grid--stack .gallery-item:nth-of-type(2) { width: 65%; margin-left: auto; }
   .gallery-grid--stack .gallery-item:nth-of-type(3) { width: 45%; margin-right: auto; }
 }
+
+
+/* ============================================================
+   HOME GALLERY — banner + duo (layout 3, full-width)
+   ============================================================ */
+.gallery-grid--banner {
+  display: block;
+}
+.gallery-grid--banner .gallery-item {
+  aspect-ratio: auto;
+  overflow: hidden;
+  margin: 0;
+}
+.gallery-grid--banner .gallery-item picture,
+.gallery-grid--banner .gallery-item img {
+  height: auto;
+}
+.gallery-grid--banner > .gallery-item {
+  margin-bottom: var(--space-6);
+}
+.gallery-duo {
+  margin-bottom: var(--space-6);
+}
+.gallery-grid--banner .see-more-link {
+  display: inline-block;
+  margin-top: var(--space-2);
+}
+@media (min-width: 768px) {
+  .gallery-duo {
+    display: flex;
+    gap: var(--space-6);
+    align-items: flex-start;
+  }
+  .gallery-duo .gallery-item:nth-child(1) { flex: 1.45; }
+  .gallery-duo .gallery-item:nth-child(2) { flex: 1; }
+}
