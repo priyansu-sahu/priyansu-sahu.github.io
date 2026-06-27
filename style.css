@@ -770,6 +770,8 @@ svg.logo-wordmark {
   margin-bottom: var(--space-6);
 }
 .gallery-duo {
+  display: grid;
+  gap: var(--space-6);
   margin-bottom: var(--space-6);
 }
 .gallery-grid--banner .see-more-link {
@@ -778,10 +780,11 @@ svg.logo-wordmark {
 }
 @media (min-width: 768px) {
   .gallery-duo {
-    display: flex;
-    gap: var(--space-6);
-    align-items: flex-start;
+    grid-template-columns: 1.09fr 1fr;
+    align-items: start;
   }
-  .gallery-duo .gallery-item:nth-child(1) { flex: 1.45; }
-  .gallery-duo .gallery-item:nth-child(2) { flex: 1; }
+  /* left col: shrine hall stacked over cat cafe; right: boat landing spans both rows */
+  .gallery-duo > .gallery-item:nth-child(1) { grid-area: 1 / 1; }
+  .gallery-duo > .gallery-item:nth-child(2) { grid-area: 2 / 1; }
+  .gallery-duo > .gallery-item:nth-child(3) { grid-area: 1 / 2 / 3 / 3; }
 }
