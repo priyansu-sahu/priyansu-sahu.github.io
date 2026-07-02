@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>admin · priontherun</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: #14130f; color: #e8e4da; line-height: 1.5;
+    display: flex; justify-content: center;
+  }
+  .wrap { width: 100%; max-width: 620px; padding: 40px 22px 80px; }
+  .top { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 4px; }
+  h1 { font-size: 1.15rem; font-weight: 600; letter-spacing: .02em; margin: 0; }
+  .sub { font-size: .8rem; color: #8f897c; margin: 0 0 26px; }
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid #2c2a23; margin-bottom: 22px; }
+  .tab {
+    appearance: none; background: none; border: none; color: #8f897c;
+    font: inherit; font-size: .92rem; padding: 9px 14px; cursor: pointer;
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+  }
+  .tab:hover { color: #cfc9bc; }
+  .tab.active { color: #f0ece2; border-bottom-color: #c9a14a; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  label { display: block; font-size: .78rem; letter-spacing: .04em; text-transform: lowercase; color: #a8a294; margin: 16px 0 6px; }
+  label .hint { text-transform: none; letter-spacing: 0; color: #6f6a5e; }
+  input[type=text], input[type=date], textarea, input[type=file] {
+    width: 100%; background: #1d1b16; border: 1px solid #322f27; border-radius: 7px;
+    color: #ece8de; font: inherit; font-size: .95rem; padding: 10px 12px;
+  }
+  input:focus, textarea:focus { outline: none; border-color: #c9a14a; }
+  textarea { resize: vertical; min-height: 88px; }
+  #p-body { min-height: 220px; line-height: 1.6; }
+  .row { display: flex; gap: 12px; }
+  .row > div { flex: 1; }
+  button.go {
+    margin-top: 22px; background: #c9a14a; color: #1a1813; border: none;
+    border-radius: 7px; font: inherit; font-weight: 600; font-size: .92rem;
+    padding: 11px 20px; cursor: pointer;
+  }
+  button.go:hover { background: #d8b25c; }
+  button.go:disabled { opacity: .5; cursor: default; }
+  #result { margin-top: 22px; font-size: .9rem; padding: 0; }
+  #result.ok { color: #b9d4a8; }
+  #result.err { color: #e7a99c; }
+  #result code { background: #221f19; padding: 1px 6px; border-radius: 4px; font-size: .85em; color: #cfc9bc; }
+  #result a { color: #d8b25c; }
+  #result .note { color: #8f897c; font-size: .82rem; margin-top: 6px; }
+  .panelnote { font-size: .8rem; color: #6f6a5e; margin-top: 14px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <h1>priontherun · admin</h1>
+    </div>
+    <p class="sub">local only — nothing publishes until you push.</p>
+
+    <div class="tabs">
+      <button class="tab active" data-panel="panel-quote">quote</button>
+      <button class="tab" data-panel="panel-post">post</button>
+      <button class="tab" data-panel="panel-photo">photo</button>
+    </div>
+
+    <!-- QUOTE -->
+    <form class="panel active" id="panel-quote" autocomplete="off">
+      <label>quote</label>
+      <textarea id="q-text" placeholder="the words…"></textarea>
+      <label>author <span class="hint">— optional</span></label>
+      <input type="text" id="q-author" placeholder="marcus aurelius">
+      <button class="go" type="submit">add quote</button>
+    </form>
+
+    <!-- POST -->
+    <form class="panel" id="panel-post" autocomplete="off">
+      <div class="row">
+        <div>
+          <label>title</label>
+          <input type="text" id="p-title" placeholder="6 days">
+        </div>
+        <div>
+          <label>date</label>
+          <input type="text" id="p-date" placeholder="may 14, 2026">
+        </div>
+      </div>
+      <label>subtitle <span class="hint">— optional</span></label>
+      <input type="text" id="p-subtitle" placeholder="a small note before graduation">
+      <label>body <span class="hint">— one blank line between paragraphs</span></label>
+      <textarea id="p-body" placeholder="just finished my last final…"></textarea>
+      <button class="go" type="submit">create post</button>
+    </form>
+
+    <!-- PHOTO -->
+    <form class="panel" id="panel-photo" autocomplete="off">
+      <label>image <span class="hint">— jpg; resized to 1600px, webp generated</span></label>
+      <input type="file" id="ph-file" accept="image/jpeg,image/png,image/*">
+      <label>caption</label>
+      <input type="text" id="ph-caption" placeholder="cat café">
+      <label>city</label>
+      <input type="text" id="ph-loc" list="cities" placeholder="kyoto">
+      <datalist id="cities">
+        <option>tokyo</option><option>kyoto</option><option>osaka</option>
+        <option>nara</option><option>kamakura</option><option>london</option>
+        <option>east sussex</option><option>paris</option><option>washington</option>
+      </datalist>
+      <button class="go" type="submit">add photo</button>
+      <p class="panelnote">added to the top of the gallery. featuring on the home page stays manual.</p>
+    </form>
+
+    <div id="result"></div>
+  </div>
+
+<script>
+  const $ = s => document.querySelector(s);
+  function show(cls, html){ const r=$('#result'); r.className=cls; r.innerHTML=html; }
+  async function post(url, data){
+    const res = await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
+    return res.json();
+  }
+  function result(j){
+    if(!j || j.error){ show('err', 'error: ' + ((j&&j.error)||'request failed')); return false; }
+    const files = (j.wrote||[]).map(f=>'<code>'+f+'</code>').join(', ');
+    const prev = j.preview ? ' &nbsp;<a href="'+j.preview+'" target="_blank" rel="noopener">open preview ↗</a>' : '';
+    const note = j.note ? '<div class="note">'+j.note+'</div>' : '';
+    show('ok', 'wrote ' + files + prev + note);
+    return true;
+  }
+  // tabs
+  document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active'); $('#'+t.dataset.panel).classList.add('active');
+    show('', '');
+  });
+  // quote
+  $('#panel-quote').onsubmit = async e => { e.preventDefault();
+    const j = await post('/api/quote', { text:$('#q-text').value, author:$('#q-author').value });
+    if(result(j)){ $('#q-text').value=''; $('#q-author').value=''; }
+  };
+  // post
+  $('#panel-post').onsubmit = async e => { e.preventDefault();
+    const j = await post('/api/post', { title:$('#p-title').value, date:$('#p-date').value, subtitle:$('#p-subtitle').value, body:$('#p-body').value });
+    if(result(j)){ $('#p-title').value=''; $('#p-subtitle').value=''; $('#p-body').value=''; }
+  };
+  // photo
+  $('#panel-photo').onsubmit = async e => { e.preventDefault();
+    const f = $('#ph-file').files[0];
+    if(!f){ show('err','choose an image first'); return; }
+    show('ok','processing image…');
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const j = await post('/api/photo', { imageBase64:reader.result, filename:f.name, caption:$('#ph-caption').value, loc:$('#ph-loc').value });
+      if(result(j)){ $('#panel-photo').reset(); }
+    };
+    reader.readAsDataURL(f);
+  };
+  // prefill today's date in the site's format
+  (function(){ const m=['january','february','march','april','may','june','july','august','september','october','november','december'];
+    const d=new Date(); $('#p-date').value = m[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear(); })();
+</script>
+</body>
+</html>

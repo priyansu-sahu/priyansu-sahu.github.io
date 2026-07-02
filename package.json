@@ -4,6 +4,7 @@
   "private": true,
   "description": "Personal website (priontherun.com).",
   "scripts": {
+    "admin": "node _admin/server.js",
     "og": "node generate-og.js",
     "sync": "node scripts/sync-partials.js",
     "webp": "node scripts/generate-webp.js",
