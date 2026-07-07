@@ -7,6 +7,7 @@
     "admin": "node _admin/server.js",
     "og": "node generate-og.js",
     "sync": "node scripts/sync-partials.js",
+    "sitemap": "node scripts/generate-sitemap.js",
     "webp": "node scripts/generate-webp.js",
     "wordmark": "node scripts/build-wordmark.js",
     "fonts": "node scripts/copy-fonts.js"

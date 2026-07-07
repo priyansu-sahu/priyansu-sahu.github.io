@@ -41,20 +41,6 @@
   src: url('/assets/fonts/crimson-pro-700.woff2') format('woff2');
   font-display: swap;
 }
-@font-face {
-  font-family: 'Caveat';
-  font-style: normal;
-  font-weight: 400;
-  src: url('/assets/fonts/caveat-400.woff2') format('woff2');
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Caveat';
-  font-style: normal;
-  font-weight: 500;
-  src: url('/assets/fonts/caveat-500.woff2') format('woff2');
-  font-display: swap;
-}
 
 /* base.css — Reset & Foundation */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
