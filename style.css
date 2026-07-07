@@ -49,6 +49,7 @@
   --color-accent:      #5b3b40;
   --color-border:      #d4d0c8;
   --color-divider:     #e2dfd8;
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* --- Dark Mode --- */
@@ -61,6 +62,7 @@
   --color-accent:      #d4b896;
   --color-border:      #3d3c38;
   --color-divider:     #2a2926;
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.045 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 @media (prefers-color-scheme: dark) {
@@ -73,6 +75,7 @@
     --color-accent:      #d4b896;
     --color-border:      #3d3c38;
     --color-divider:     #2a2926;
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.045 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 }
 
@@ -84,6 +87,7 @@ body {
   font-family: var(--font-body);
   font-size: var(--text-base);
   line-height: 1.7;
+  background-image: var(--grain);
 }
 
 .site-wrapper {
@@ -122,26 +126,6 @@ body {
   width: 48px;
   height: 48px;
   flex-shrink: 0;
-  transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.logo-link:hover .logo-svg {
-  animation: logo-spin 8s linear infinite;
-}
-
-@keyframes logo-spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-.logo-wordmark {
-  font-family: var(--font-display);
-  font-size: var(--text-sm);
-  font-style: italic;
-  font-weight: 300;
-  letter-spacing: 0.18em;
-  text-transform: lowercase;
-  white-space: nowrap;
 }
 
 svg.logo-wordmark {
@@ -203,6 +187,8 @@ svg.logo-wordmark {
   padding: var(--space-3);
   min-width: 44px;
   min-height: 44px;
+  border: 1px solid var(--color-divider);
+  border-radius: 50%;
   color: var(--color-text-muted);
   display: flex;
   align-items: center;
@@ -217,6 +203,7 @@ svg.logo-wordmark {
 
 .theme-toggle:hover {
   color: var(--color-text);
+  border-color: var(--color-border);
 }
 
 .theme-toggle:hover svg {
@@ -275,8 +262,8 @@ svg.logo-wordmark {
   font-family: var(--font-display);
   font-size: var(--text-2xl);   /* mobile / default */
   font-weight: 300;
-  line-height: 1.05;
-  letter-spacing: -0.01em;
+  line-height: 1.03;
+  letter-spacing: -0.015em;
   color: var(--color-text);
   margin-bottom: var(--space-6);
 }
@@ -290,7 +277,7 @@ svg.logo-wordmark {
 .hero-content h1 em {
   font-style: italic;
   font-weight: 200;
-  color: var(--color-text-muted);
+  color: var(--color-accent);
   padding-inline: 0.08em;
 }
 
@@ -299,6 +286,19 @@ svg.logo-wordmark {
   color: var(--color-text-muted);
   max-width: 55ch;
   line-height: 1.8;
+}
+
+.hero-content p > em {
+  color: var(--color-text);
+}
+
+.hero-note {
+  margin-top: var(--space-5);
+  font-family: var(--font-label);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  color: var(--color-text-faint);
 }
 
 /* ============================================================
@@ -602,7 +602,7 @@ svg.logo-wordmark {
   opacity: 1;
 }
 
-@media (min-width: 960px) {
+@media (min-width: 960px) and (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: scroll()) {
     .reveal {
       opacity: 0;
@@ -613,7 +613,10 @@ svg.logo-wordmark {
   }
 }
 
-@keyframes reveal-fade { to { opacity: 1; } }
+@keyframes reveal-fade {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
 
 /* ============================================================
    BUTTONS — used by tool pages
@@ -659,7 +662,7 @@ svg.logo-wordmark {
     padding-block: var(--space-6);
   }
 
-  .logo-wordmark {
+  svg.logo-wordmark {
     display: none;
   }
 
@@ -722,4 +725,24 @@ svg.logo-wordmark {
   .gallery-duo > .gallery-item:nth-child(1) { grid-area: 1 / 1; }
   .gallery-duo > .gallery-item:nth-child(2) { grid-area: 2 / 1; }
   .gallery-duo > .gallery-item:nth-child(3) { grid-area: 1 / 2 / 3 / 3; }
+}
+
+
+/* ============================================================
+   HAIRLINE DIVIDERS — fade at the edges
+   ============================================================ */
+.section-row,
+.site-footer {
+  border-top: none;
+  position: relative;
+}
+.section-row::before,
+.site-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--color-divider) 8%, var(--color-divider) 92%, transparent);
 }
