@@ -21,11 +21,11 @@
     const lines     = text === '' ? 0 : text.split('\n').length;
     const sentences = text.trim() === '' ? 0 : (text.match(/[^.!?]*[.!?]+/g) || []).length;
     const empty = text.trim() === '';
-    statWords.textContent   = empty ? '—' : words.toLocaleString();
-    statChars.textContent   = empty ? '—' : chars.toLocaleString();
-    statCharsNS.textContent = empty ? '—' : charsNoSp.toLocaleString();
-    statLines.textContent   = empty ? '—' : lines.toLocaleString();
-    statSents.textContent   = empty ? '—' : sentences.toLocaleString();
+    statWords.textContent   = empty ? '·' : words.toLocaleString();
+    statChars.textContent   = empty ? '·' : chars.toLocaleString();
+    statCharsNS.textContent = empty ? '·' : charsNoSp.toLocaleString();
+    statLines.textContent   = empty ? '·' : lines.toLocaleString();
+    statSents.textContent   = empty ? '·' : sentences.toLocaleString();
 
     // Debounced — keep screen-reader announcements quiet while typing.
     if (announcer) {

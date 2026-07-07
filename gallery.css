@@ -1,5 +1,28 @@
 /* Gallery Page - Full photo grid */
 
+.gallery-header {
+  padding-block: var(--space-12) 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.gallery-header h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: var(--color-text);
+}
+
+.gallery-subtitle {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  letter-spacing: 0.01em;
+}
+
 .gallery-full {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -79,6 +102,7 @@
   color: var(--color-text);
   font-weight: 500;
   text-decoration: underline;
+  text-decoration-color: var(--color-accent);
   text-underline-offset: 4px;
 }
 

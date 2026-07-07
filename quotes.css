@@ -30,7 +30,7 @@
 }
 
 .quote {
-  border-top: 1px solid var(--color-divider);
+  position: relative;
   padding-block: var(--space-8);
   margin: 0;
   display: grid;
@@ -38,17 +38,26 @@
   max-width: 62ch;
 }
 
-.quote:last-child {
-  border-bottom: 1px solid var(--color-divider);
+.quote::before,
+.quote:last-child::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--hairline);
 }
+
+.quote::before { top: 0; }
+.quote:last-child::after { bottom: 0; }
 
 .quote p {
   margin: 0;
   font-family: var(--font-display);
-  font-size: var(--text-lg);
+  font-size: var(--text-xl);
   font-weight: 300;
   font-style: italic;
-  line-height: 1.5;
+  line-height: 1.45;
   color: var(--color-text);
   text-wrap: balance;
 }
@@ -61,8 +70,4 @@
   letter-spacing: 0.08em;
   text-transform: lowercase;
   color: var(--color-text-faint);
-}
-
-.quote cite::before {
-  content: "\2014\00a0";
 }

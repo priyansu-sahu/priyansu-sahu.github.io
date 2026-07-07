@@ -54,6 +54,7 @@
   const prevBtn   = document.getElementById('lightbox-prev');
   const nextBtn   = document.getElementById('lightbox-next');
   const counter   = document.getElementById('lightbox-counter');
+  const captionEl = document.getElementById('lightbox-caption');
 
   const items = Array.from(document.querySelectorAll('[data-lightbox]'));
   let currentIndex = -1;
@@ -67,6 +68,12 @@
     currentIndex = index;
     lightboxImg.src = img.src;
     lightboxImg.alt = img.alt || 'Photograph';
+    if (captionEl) {
+      const cap = item.querySelector('.gallery-caption');
+      const loc = cap && cap.querySelector('.gallery-caption-loc');
+      const title = cap ? cap.childNodes[0].textContent.trim() : '';
+      captionEl.textContent = loc ? title + ' · ' + loc.textContent.trim() : title;
+    }
     lightbox.classList.add('active');
     document.body.style.overflow = 'hidden';
     updateNav();

@@ -34,6 +34,9 @@
   --font-display: 'Crimson Pro', 'Georgia', serif;
   --font-label: 'Satoshi', 'Helvetica Neue', sans-serif;
 
+  /* Hairline rules that fade at the edges */
+  --hairline: linear-gradient(to right, transparent, var(--color-divider) 8%, var(--color-divider) 92%, transparent);
+
   /* Transitions */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -582,6 +585,20 @@ svg.logo-wordmark {
 .lightbox-prev:hover,
 .lightbox-next:hover { color: #fff; }
 
+.lightbox-caption {
+  position: absolute;
+  bottom: calc(var(--space-6) + 1.5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 84vw;
+  text-align: center;
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.78);
+  user-select: none;
+}
+
 .lightbox-counter {
   position: absolute;
   bottom: var(--space-6);
@@ -744,5 +761,5 @@ svg.logo-wordmark {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(to right, transparent, var(--color-divider) 8%, var(--color-divider) 92%, transparent);
+  background: var(--hairline);
 }

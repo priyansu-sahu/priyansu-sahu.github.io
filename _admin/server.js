@@ -37,8 +37,7 @@ function typo(s) {
   return s
     .replace(/(\S)'(\S)/g, '$1&rsquo;$2')
     .replace(/'/g, '&rsquo;')
-    .replace(/"([^"]*)"/g, '&ldquo;$1&rdquo;')
-    .replace(/ -- /g, ' &mdash; ');
+    .replace(/"([^"]*)"/g, '&ldquo;$1&rdquo;');
 }
 function slugify(s) {
   return String(s).toLowerCase().trim()
@@ -83,7 +82,7 @@ function addPost({ title, date, subtitle, body }) {
   const slug = slugify(title);
   if (!slug) throw new Error('Title has no usable characters for a URL slug.');
   const dir = R('writing', slug);
-  if (exists(dir)) throw new Error(`writing/${slug}/ already exists — pick a different title.`);
+  if (exists(dir)) throw new Error(`writing/${slug}/ already exists, pick a different title.`);
   const tplPath = R('_admin', 'templates', 'post.html');
   if (!exists(tplPath)) throw new Error('Missing _admin/templates/post.html');
 
@@ -97,8 +96,8 @@ function addPost({ title, date, subtitle, body }) {
   let html = read(tplPath);
   const titleE = esc(title.trim());
   const subE = esc(sub);
-  const og = sub ? `${titleE} &mdash; ${subE}` : titleE;
-  const desc = sub ? `${subE} — writing by priyansu s.` : 'Writing by priyansu s.';
+  const og = sub ? `${titleE} &middot; ${subE}` : titleE;
+  const desc = sub ? `${subE}. Writing by priyansu s.` : 'Writing by priyansu s.';
   html = html.split('{{TITLE}}').join(titleE)
              .split('{{SUBTITLE}}').join(subE)
              .split('{{DATE}}').join(esc(d))
@@ -143,7 +142,7 @@ async function addPhoto({ imageBase64, filename, caption, loc, alt }) {
   let stem = (filename || '').replace(/\.[^.]+$/, '').replace(/[^A-Za-z0-9_-]/g, '');
   if (!stem) stem = 'photo-' + Date.now();
   if (exists(R('assets', stem + '.jpg')) || exists(R('assets', stem + '.webp')))
-    throw new Error(`assets/${stem}.* already exists — rename the file first.`);
+    throw new Error(`assets/${stem}.* already exists, rename the file first.`);
 
   const buf = Buffer.from(String(imageBase64).replace(/^data:[^,]*,/, ''), 'base64');
   const pipe = sharp(buf).rotate().resize(1600, 1600, { fit: 'inside', withoutEnlargement: true });
@@ -246,7 +245,7 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, '127.0.0.1', () => {
   const url = `http://localhost:${PORT}/`;
   console.log(`\n  admin tool running  ->  ${url}`);
-  if (!sharp) console.log('  ! sharp not installed yet — the Photo tab needs "npm install"');
+  if (!sharp) console.log('  ! sharp not installed yet, the Photo tab needs "npm install"');
   console.log('  Ctrl+C to stop.\n');
   if (!process.env.ADMIN_NO_OPEN) {
     const cmd = process.platform === 'win32' ? `start "" "${url}"`
