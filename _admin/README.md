@@ -14,7 +14,7 @@ Starts a local server on <http://localhost:4517> and opens it in your browser. T
 
 - **Quote**: appends a `<li>` to `quotes/index.html`. Straight quotes/apostrophes become typographic (`&rsquo;`, `&ldquo;…&rdquo;`). No em dashes, ever.
 - **Post**: creates `writing/<slug>/index.html` from `templates/post.html` and prepends an entry to `writing/index.html`. Write the body as plain text, one blank line between paragraphs.
-- **Photo**: pick a JPG; it's auto-rotated and resized to 1600px on the long edge, written as `.jpg` (q88) + `.webp` (q82) in `assets/`, and a gallery item is added to the **top** of `gallery/index.html`. Dimensions are read from the output and baked into the markup.
+- **Photo**: pick a JPG; it's auto-rotated and resized to 1600px on the long edge, written as `.jpg` (q88) + `.webp` (q82) in `assets/`, and a gallery item is added to the **top** of `gallery/index.html`. Dimensions, the dominant-color placeholder, and EXIF (aperture/shutter/iso/focal, when the source file has it) are baked into the markup. `npm run photo-meta` re-derives placeholder + EXIF for every existing photo.
 
 After each action you get an **open preview** link; the server also serves the real site from disk, so you see the actual page before anything is public.
 

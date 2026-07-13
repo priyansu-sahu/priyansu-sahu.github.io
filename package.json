@@ -8,6 +8,7 @@
     "og": "node generate-og.js",
     "sync": "node scripts/sync-partials.js",
     "sitemap": "node scripts/generate-sitemap.js",
+    "photo-meta": "node scripts/backfill-photo-meta.js",
     "webp": "node scripts/generate-webp.js",
     "wordmark": "node scripts/build-wordmark.js",
     "fonts": "node scripts/copy-fonts.js"
@@ -15,6 +16,7 @@
   "devDependencies": {
     "@fontsource/caveat": "^5.0.0",
     "@fontsource/crimson-pro": "^5.0.0",
+    "exif-reader": "^2.0.3",
     "opentype.js": "^1.3.4",
     "sharp": "^0.33.0"
   }

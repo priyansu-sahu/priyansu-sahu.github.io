@@ -20,6 +20,8 @@ const PORT = Number(process.env.ADMIN_PORT) || 4517;
 
 let sharp = null;
 try { sharp = require('sharp'); } catch (_) { /* photo tab reports if missing */ }
+let exifReader = null;
+try { exifReader = require('exif-reader'); } catch (_) { /* exif line skipped if missing */ }
 
 /* ---------- small helpers ---------- */
 const read   = p => fs.readFileSync(p, 'utf8');
@@ -149,9 +151,19 @@ async function addPhoto({ imageBase64, filename, caption, loc, alt }) {
   await pipe.clone().jpeg({ quality: 88, mozjpeg: true }).toFile(R('assets', stem + '.jpg'));
   await pipe.clone().webp({ quality: 82 }).toFile(R('assets', stem + '.webp'));
   const meta = await sharp(R('assets', stem + '.jpg')).metadata();
+  const stats = await sharp(R('assets', stem + '.jpg')).stats();
+  const dom = stats.dominant;
+  const ph = '#' + [dom.r, dom.g, dom.b].map(v => v.toString(16).padStart(2, '0')).join('');
+  let exif = '';
+  if (exifReader) {
+    try {
+      const srcMeta = await sharp(buf).metadata();
+      if (srcMeta.exif) exif = exifLine(exifReader(srcMeta.exif));
+    } catch (_) {}
+  }
 
   const warn = insertGalleryItem({
-    stem, caption: caption.trim(),
+    stem, caption: caption.trim(), ph, exif,
     loc: loc.trim().toLowerCase(),
     alt: (alt && alt.trim()) ? alt.trim() : caption.trim(),
     w: meta.width, h: meta.height,
@@ -163,7 +175,19 @@ async function addPhoto({ imageBase64, filename, caption, loc, alt }) {
   };
 }
 
-function insertGalleryItem({ stem, caption, loc, alt, w, h }) {
+function exifLine(tags) {
+  const p = (tags && (tags.Photo || tags.exif)) || {};
+  const parts = [];
+  const n = v => String(+(+v).toFixed(1));
+  if (p.FNumber) parts.push('f/' + n(p.FNumber));
+  if (p.ExposureTime) parts.push(p.ExposureTime >= 1 ? n(p.ExposureTime) + 's' : '1/' + Math.round(1 / p.ExposureTime));
+  const iso = p.ISOSpeedRatings || p.PhotographicSensitivity || p.ISO;
+  if (iso) parts.push('iso ' + (Array.isArray(iso) ? iso[0] : iso));
+  if (p.FocalLength) parts.push(n(p.FocalLength) + 'mm');
+  return parts.join(' · ');
+}
+
+function insertGalleryItem({ stem, caption, loc, alt, w, h, ph, exif }) {
   const file = R('gallery', 'index.html');
   let c = read(file); const n = nlOf(c);
   const anchor = '<section class="gallery-full">';
@@ -171,7 +195,7 @@ function insertGalleryItem({ stem, caption, loc, alt, w, h }) {
   if (i < 0) throw new Error('Could not find the gallery section.');
   const at = i + anchor.length;
   const L = [``, ``,
-    `        <div class="gallery-item reveal" data-lightbox data-loc="${attr(loc)}">`,
+    `        <div class="gallery-item reveal" data-lightbox data-loc="${attr(loc)}"${ph ? ` style="background-color:${ph}"` : ''}${exif ? ` data-exif="${attr(exif)}"` : ''}>`,
     `          <picture><source srcset="../assets/${stem}.webp" type="image/webp"><img src="../assets/${stem}.jpg" alt="${attr(alt)}" loading="lazy" decoding="async" width="${w}" height="${h}"></picture>`,
     `          <div class="gallery-caption">${typo(esc(caption))} <span class="gallery-caption-loc">${esc(loc)}</span></div>`,
     `        </div>`];

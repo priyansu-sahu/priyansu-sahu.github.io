@@ -59,15 +59,28 @@
   animation: none;
 }
 
-.gallery-full .gallery-item--portrait {
-  grid-row: span 2;
+/* Justified rows (applied by JS; the grid above is the no-JS fallback).
+   Row heights are computed in app.js from each photo's true aspect ratio,
+   so nothing is cropped. */
+.gallery-full.gallery-justified {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.gallery-justified .gallery-item {
+  flex: 0 0 auto;
   aspect-ratio: auto;
 }
 
-.gallery-full .gallery-item--portrait img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+/* dominant-color placeholder shows through while the photo loads */
+.gallery-justified .gallery-item img {
+  opacity: 0;
+  transition: opacity 500ms var(--ease-out);
+}
+
+.gallery-justified .gallery-item img.is-loaded {
+  opacity: 1;
 }
 
 

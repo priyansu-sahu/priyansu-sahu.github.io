@@ -55,6 +55,7 @@
   const nextBtn   = document.getElementById('lightbox-next');
   const counter   = document.getElementById('lightbox-counter');
   const captionEl = document.getElementById('lightbox-caption');
+  const exifEl    = document.getElementById('lightbox-exif');
 
   const items = Array.from(document.querySelectorAll('[data-lightbox]'));
   let currentIndex = -1;
@@ -74,9 +75,11 @@
       const title = cap ? cap.childNodes[0].textContent.trim() : '';
       captionEl.textContent = loc ? title + ' · ' + loc.textContent.trim() : title;
     }
+    if (exifEl) exifEl.textContent = item.dataset.exif || '';
     lightbox.classList.add('active');
     document.body.style.overflow = 'hidden';
     updateNav();
+    preloadNeighbors();
     requestAnimationFrame(function () {
       if (closeBtn) closeBtn.focus();
     });
@@ -115,16 +118,30 @@
     return !item.classList.contains('gallery-hidden');
   }
 
-  function showPrev() {
-    for (var i = currentIndex - 1; i >= 0; i--) {
-      if (isVisible(items[i])) { openLightbox(i); return; }
+  function nearestVisible(from, dir) {
+    for (var i = from + dir; i >= 0 && i < items.length; i += dir) {
+      if (isVisible(items[i])) return i;
     }
+    return -1;
+  }
+
+  function showPrev() {
+    var i = nearestVisible(currentIndex, -1);
+    if (i !== -1) openLightbox(i);
   }
 
   function showNext() {
-    for (var i = currentIndex + 1; i < items.length; i++) {
-      if (isVisible(items[i])) { openLightbox(i); return; }
-    }
+    var i = nearestVisible(currentIndex, 1);
+    if (i !== -1) openLightbox(i);
+  }
+
+  // fetch the full images either side so arrows/swipes feel instant
+  function preloadNeighbors() {
+    [nearestVisible(currentIndex, -1), nearestVisible(currentIndex, 1)].forEach(function (i) {
+      if (i === -1) return;
+      var im = items[i].querySelector('img');
+      if (im) { var pre = new Image(); pre.src = im.src; }
+    });
   }
 
   items.forEach(function (item, index) {
@@ -151,8 +168,24 @@
   });
 
   lightbox.addEventListener('click', function (e) {
+    if (swiped) return;
     if (e.target === lightbox || e.target === lightboxImg) closeLightbox();
   });
+
+  // touch swipe to flip photos
+  var touchX = 0, touchY = 0, swiped = false;
+  lightbox.addEventListener('touchstart', function (e) {
+    if (e.touches.length === 1) { touchX = e.touches[0].clientX; touchY = e.touches[0].clientY; }
+  }, { passive: true });
+  lightbox.addEventListener('touchend', function (e) {
+    var t = e.changedTouches[0];
+    var dx = t.clientX - touchX, dy = t.clientY - touchY;
+    if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      swiped = true;
+      setTimeout(function () { swiped = false; }, 400);
+      if (dx < 0) showNext(); else showPrev();
+    }
+  }, { passive: true });
 
   closeBtn && closeBtn.addEventListener('click', closeLightbox);
   prevBtn  && prevBtn.addEventListener('click',  function (e) { e.stopPropagation(); showPrev(); });
@@ -199,6 +232,7 @@
       c.classList.toggle('is-active', active);
       c.setAttribute('aria-pressed', active ? 'true' : 'false');
     });
+    window.dispatchEvent(new CustomEvent('gallery:filtered'));
     if (push !== false) {
       if (loc === 'all') history.replaceState(null, '', location.pathname + location.search);
       else history.replaceState(null, '', '#' + loc.replace(/ /g, '-'));
@@ -212,4 +246,58 @@
   var initial = decodeURIComponent((location.hash || '').replace('#', '')).replace(/-/g, ' ');
   if (!chips.some(function (c) { return c.getAttribute('data-filter') === initial; })) initial = 'all';
   apply(initial, false);
+})();
+
+
+// --- Justified gallery rows (full frames, no crops) ---
+(function () {
+  const grid = document.querySelector('.gallery-full');
+  if (!grid) return;
+  const items = Array.from(grid.querySelectorAll('.gallery-item'));
+  if (!items.length) return;
+
+  const ratios = items.map(function (it) {
+    const im = it.querySelector('img');
+    const w = parseInt(im && im.getAttribute('width'), 10) || 3;
+    const h = parseInt(im && im.getAttribute('height'), 10) || 2;
+    return w / h;
+  });
+
+  grid.classList.add('gallery-justified');
+  items.forEach(function (it) {
+    const im = it.querySelector('img');
+    if (!im) return;
+    if (im.complete && im.naturalWidth) im.classList.add('is-loaded');
+    else im.addEventListener('load', function () { im.classList.add('is-loaded'); }, { once: true });
+  });
+
+  function layout() {
+    const W = grid.getBoundingClientRect().width;
+    if (!W) return;
+    const gap = parseFloat(getComputedStyle(grid).columnGap) || 12;
+    const target = W < 560 ? 280 : W < 900 ? 260 : 320;
+    let row = [], sum = 0;
+    function flush(justify) {
+      if (!row.length) return;
+      const gaps = gap * (row.length - 1);
+      const h = justify ? (W - gaps - 0.5) / sum : Math.min(target, (W - gaps - 0.5) / sum);
+      row.forEach(function (i) {
+        items[i].style.width = (ratios[i] * h).toFixed(2) + 'px';
+        items[i].style.height = h.toFixed(2) + 'px';
+      });
+      row = []; sum = 0;
+    }
+    items.forEach(function (it, i) {
+      if (it.classList.contains('gallery-hidden')) return;
+      row.push(i); sum += ratios[i];
+      if (sum * target + gap * (row.length - 1) >= W) flush(true);
+    });
+    flush(false);
+  }
+
+  let raf = 0;
+  function schedule() { cancelAnimationFrame(raf); raf = requestAnimationFrame(layout); }
+  window.addEventListener('resize', schedule);
+  window.addEventListener('gallery:filtered', schedule);
+  layout();
 })();
