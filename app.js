@@ -20,18 +20,32 @@
     void toggle.offsetWidth; // force reflow to restart animation
     toggle.classList.add('toggling');
 
-    // Swap theme at the midpoint of the animation (when icon is smallest)
-    setTimeout(function () {
-      theme = theme === 'dark' ? 'light' : 'dark';
+    // Swap immediately — a delay here reads as an unresponsive button, and it
+    // would still be there when the spin is suppressed by reduced motion.
+    theme = theme === 'dark' ? 'light' : 'dark';
+    withoutTransitions(function () {
       root.setAttribute('data-theme', theme);
-      try { localStorage.setItem('theme', theme); } catch(e) {}
-      toggle.setAttribute('aria-label', 'Switch to ' + (theme === 'dark' ? 'light' : 'dark') + ' mode');
-      updateToggleIcon();
-    }, 200);
+    });
+    try { localStorage.setItem('theme', theme); } catch(e) {}
+    updateToggleIcon();
 
     // Clean up animation class
     setTimeout(function () { toggle.classList.remove('toggling'); }, 500);
   });
+
+  // A theme flip repaints colour, background and border on nearly everything at
+  // once. Anything mid-transition smears instead of snapping, so mute them for
+  // one frame.
+  function withoutTransitions(apply) {
+    const mute = document.createElement('style');
+    mute.textContent = '*,*::before,*::after{transition:none !important}';
+    document.head.appendChild(mute);
+    apply();
+    void document.body.offsetHeight; // force reflow so the swap lands muted
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { mute.remove(); });
+    });
+  }
 
   function updateToggleIcon() {
     if (!toggle) return;
@@ -76,6 +90,7 @@
       captionEl.textContent = loc ? title + ' · ' + loc.textContent.trim() : title;
     }
     if (exifEl) exifEl.textContent = item.dataset.exif || '';
+    lightbox.removeAttribute('inert');
     lightbox.classList.add('active');
     document.body.style.overflow = 'hidden';
     updateNav();
@@ -94,6 +109,8 @@
       lastFocus.focus();
     }
     lastFocus = null;
+    // after the focus restore, so we never inert the element holding focus
+    lightbox.setAttribute('inert', '');
   }
 
   function updateNav() {
@@ -221,17 +238,25 @@
   if (!bar) return;
   const chips = Array.from(bar.querySelectorAll('[data-filter]'));
   const items = Array.from(document.querySelectorAll('.gallery-full .gallery-item'));
+  const announce = document.getElementById('gallery-announce');
 
   function apply(loc, push) {
+    let shown = 0;
     items.forEach(function (it) {
       const show = loc === 'all' || it.getAttribute('data-loc') === loc;
       it.classList.toggle('gallery-hidden', !show);
+      if (show) shown++;
     });
     chips.forEach(function (c) {
       const active = c.getAttribute('data-filter') === loc;
       c.classList.toggle('is-active', active);
       c.setAttribute('aria-pressed', active ? 'true' : 'false');
     });
+    // the grid changes silently otherwise — nothing tells a screen reader
+    if (announce && push !== false) {
+      announce.textContent = shown + (shown === 1 ? ' photo' : ' photos') +
+        (loc === 'all' ? '' : ' from ' + loc);
+    }
     window.dispatchEvent(new CustomEvent('gallery:filtered'));
     if (push !== false) {
       if (loc === 'all') history.replaceState(null, '', location.pathname + location.search);

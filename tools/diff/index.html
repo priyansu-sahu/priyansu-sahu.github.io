@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- @partial:meta -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://api.fontshare.com; font-src 'self' https://api.fontshare.com https://cdn.fontshare.com; script-src 'self' 'unsafe-inline'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
   <!-- @end -->
@@ -15,8 +15,6 @@
   <link rel="icon" type="image/png" href="../../assets/favicon.png">
   <link rel="apple-touch-icon" href="../../assets/favicon.png">
 
-  <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
-  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="../../base.css">
   <link rel="stylesheet" href="../../style.css">
@@ -71,17 +69,17 @@
 
       <div class="diff-header">
         <h1>diff checker</h1>
-        <p>Paste two texts below and compare.</p>
+        <p>paste two texts below and compare.</p>
       </div>
 
       <div class="diff-inputs">
         <div class="diff-pane">
           <label class="diff-label" for="text-a">text 1</label>
-          <textarea id="text-a" class="diff-textarea" placeholder="Paste text 1 here…" spellcheck="false"></textarea>
+          <textarea id="text-a" class="diff-textarea" placeholder="paste text 1 here…" spellcheck="false"></textarea>
         </div>
         <div class="diff-pane">
           <label class="diff-label" for="text-b">text 2</label>
-          <textarea id="text-b" class="diff-textarea" placeholder="Paste text 2 here…" spellcheck="false"></textarea>
+          <textarea id="text-b" class="diff-textarea" placeholder="paste text 2 here…" spellcheck="false"></textarea>
         </div>
       </div>
 

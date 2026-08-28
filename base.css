@@ -41,6 +41,27 @@
   src: url('/assets/fonts/crimson-pro-700.woff2') format('woff2');
   font-display: swap;
 }
+@font-face {
+  font-family: 'Satoshi';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/assets/fonts/satoshi-400.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/assets/fonts/satoshi-500.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/assets/fonts/satoshi-700.woff2') format('woff2');
+  font-display: swap;
+}
 
 /* base.css — Reset & Foundation */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -67,6 +88,13 @@ body {
 }
 
 img, picture, video, canvas, svg { display: block; max-width: 100%; height: auto; }
+
+/* Links with no component style of their own (404 recovery, article body). */
+a {
+  color: var(--color-link);
+  text-decoration-thickness: from-font;
+  text-underline-offset: 0.18em;
+}
 ul[role="list"], ol[role="list"] { list-style: none; }
 input, button, textarea, select { font: inherit; color: inherit; }
 

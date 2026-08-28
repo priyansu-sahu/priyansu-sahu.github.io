@@ -207,12 +207,12 @@
   compareBtn.addEventListener('click', function () {
     const MAX_LEN = 1_000_000;
     if (textA.value.length > MAX_LEN || textB.value.length > MAX_LEN) {
-      output.innerHTML = '<div class="diff-empty">Inputs over 1 MB are not supported. Please trim and try again.</div>';
+      output.innerHTML = '<div class="diff-empty">inputs over 1 MB are not supported. trim the text and try again.</div>';
       stats.textContent = '';
       return;
     }
     if (!textA.value.trim() && !textB.value.trim()) {
-      output.innerHTML = '<div class="diff-empty">Paste text into both fields to compare.</div>';
+      output.innerHTML = '<div class="diff-empty">paste text into both fields to compare.</div>';
       stats.textContent = '';
       return;
     }

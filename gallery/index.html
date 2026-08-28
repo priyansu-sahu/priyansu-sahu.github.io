@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- @partial:meta -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://api.fontshare.com; font-src 'self' https://api.fontshare.com https://cdn.fontshare.com; script-src 'self' 'unsafe-inline'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
   <!-- @end -->
@@ -26,8 +26,6 @@
   <link rel="icon" type="image/png" href="../assets/favicon.png">
   <link rel="shortcut icon" href="../assets/favicon.ico">
   <link rel="apple-touch-icon" href="../assets/favicon.png">
-  <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
-  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="../base.css">
   <link rel="stylesheet" href="../style.css">
@@ -96,6 +94,8 @@
         <button type="button" class="filter-chip" data-filter="paris" aria-pressed="false">paris</button>
         <button type="button" class="filter-chip" data-filter="washington" aria-pressed="false">washington</button>
       </nav>
+
+      <div class="sr-only" id="gallery-announce" aria-live="polite" aria-atomic="true"></div>
 
       <section class="gallery-full">
 
@@ -473,7 +473,7 @@
   </div>
 
   <!-- LIGHTBOX -->
-  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer" inert>
     <button class="lightbox-close" aria-label="Close image viewer">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
         <path d="M18 6 6 18M6 6l12 12"/>

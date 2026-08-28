@@ -48,8 +48,9 @@
   --color-surface:     #f5f2eb;
   --color-text:        #1a1815;
   --color-text-muted:  #6e6b64;
-  --color-text-faint:  #767370;
+  --color-text-faint:  #6f6c68;
   --color-accent:      #5b3b40;
+  --color-link:        #5b3b40;
   --color-border:      #d4d0c8;
   --color-divider:     #e2dfd8;
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -61,8 +62,9 @@
   --color-surface:     #1e1d1a;
   --color-text:        #d5d3ce;
   --color-text-muted:  #8a8882;
-  --color-text-faint:  #777471;
+  --color-text-faint:  #838079;
   --color-accent:      #d4b896;
+  --color-link:        #d4b896;
   --color-border:      #3d3c38;
   --color-divider:     #2a2926;
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.045 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -74,8 +76,9 @@
     --color-surface:     #1e1d1a;
     --color-text:        #d5d3ce;
     --color-text-muted:  #8a8882;
-    --color-text-faint:  #777471;
+    --color-text-faint:  #838079;
     --color-accent:      #d4b896;
+    --color-link:        #d4b896;
     --color-border:      #3d3c38;
     --color-divider:     #2a2926;
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.045 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -279,7 +282,7 @@ svg.logo-wordmark {
 
 .hero-content h1 em {
   font-style: italic;
-  font-weight: 200;
+  font-weight: 300;
   color: var(--color-accent);
   padding-inline: 0.08em;
 }
@@ -405,7 +408,8 @@ svg.logo-wordmark {
   transition: opacity 300ms var(--ease-out), transform 300ms var(--ease-out);
 }
 
-.gallery-item:hover .gallery-caption {
+.gallery-item:hover .gallery-caption,
+.gallery-item:focus-within .gallery-caption {
   opacity: 1;
   transform: translateY(0);
 }
@@ -532,13 +536,25 @@ svg.logo-wordmark {
   padding: var(--space-8);
   cursor: zoom-out;
   opacity: 0;
+  /* visibility keeps the closed viewer out of the tab order and the a11y tree.
+     Closing delays the flip until the fade finishes; opening flips at once, so
+     the close button is focusable on the frame we focus it. */
+  visibility: hidden;
   pointer-events: none;
-  transition: opacity 300ms var(--ease-out);
+  transition: opacity 300ms var(--ease-out), visibility 0s linear 300ms;
 }
 
 .lightbox.active {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
+  transition: opacity 300ms var(--ease-out), visibility 0s linear 0s;
+}
+
+/* The overlay is near-black in both themes, so the accent-colored page focus
+   ring would sit at 1.9:1 against it. */
+.lightbox :focus-visible {
+  outline-color: #f0ede6;
 }
 
 .lightbox img {
