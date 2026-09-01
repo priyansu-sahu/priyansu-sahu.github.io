@@ -297,13 +297,9 @@
   });
 
   function layout() {
-    // the grid bleeds to the viewport edges (see gallery.css); publish the
-    // scrollbar-free width it should span before measuring it
-    document.documentElement.style.setProperty('--vw', document.documentElement.clientWidth + 'px');
-    const cs = getComputedStyle(grid);
-    const W = grid.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-    if (!(W > 0)) return;
-    const gap = parseFloat(cs.columnGap) || 12;
+    const W = grid.getBoundingClientRect().width;
+    if (!W) return;
+    const gap = parseFloat(getComputedStyle(grid).columnGap) || 12;
     // One photo per row on phones. Otherwise aim high (55% of the grid width,
     // capped at 600px): a row's real height is bounded by width / sum of its
     // aspect ratios, so a tall target just means fewer photos per row — two

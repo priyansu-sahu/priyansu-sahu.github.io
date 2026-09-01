@@ -97,7 +97,10 @@ body {
 }
 
 .site-wrapper {
-  max-width: 1200px;
+  /* 1360 gives the gallery a ~1264px column at 1440, wide enough for two
+     landscapes per row at print-like size; below ~1360 viewports the column
+     already fills the screen, so nothing changes there */
+  max-width: 1360px;
   margin-inline: auto;
   padding-inline: var(--space-6);
 }
