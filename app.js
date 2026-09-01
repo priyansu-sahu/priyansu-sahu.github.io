@@ -297,10 +297,19 @@
   });
 
   function layout() {
-    const W = grid.getBoundingClientRect().width;
-    if (!W) return;
-    const gap = parseFloat(getComputedStyle(grid).columnGap) || 12;
-    const target = W < 560 ? 280 : W < 900 ? 260 : 320;
+    // the grid bleeds to the viewport edges (see gallery.css); publish the
+    // scrollbar-free width it should span before measuring it
+    document.documentElement.style.setProperty('--vw', document.documentElement.clientWidth + 'px');
+    const cs = getComputedStyle(grid);
+    const W = grid.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    if (!(W > 0)) return;
+    const gap = parseFloat(cs.columnGap) || 12;
+    // One photo per row on phones. Otherwise aim high (55% of the grid width,
+    // capped at 600px): a row's real height is bounded by width / sum of its
+    // aspect ratios, so a tall target just means fewer photos per row — two
+    // landscapes, or a landscape beside a portrait, at roughly three times the
+    // area of the old three-up layout.
+    const target = W < 560 ? Infinity : Math.min(600, W * 0.55);
     let row = [], sum = 0;
     function flush(justify) {
       if (!row.length) return;
