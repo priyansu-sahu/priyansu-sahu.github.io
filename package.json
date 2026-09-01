@@ -11,7 +11,8 @@
     "photo-meta": "node scripts/backfill-photo-meta.js",
     "webp": "node scripts/generate-webp.js",
     "wordmark": "node scripts/build-wordmark.js",
-    "fonts": "node scripts/copy-fonts.js"
+    "fonts": "node scripts/copy-fonts.js",
+    "gallery-sort": "node scripts/sort-gallery.js"
   },
   "devDependencies": {
     "@fontsource/caveat": "^5.0.0",
