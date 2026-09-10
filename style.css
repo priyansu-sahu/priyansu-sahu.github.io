@@ -310,6 +310,28 @@ svg.logo-wordmark {
   color: var(--color-text-faint);
 }
 
+/* Keep the inset introduction; tighten only its surrounding space. */
+.home-page .hero {
+  padding-block: var(--space-10);
+}
+
+.home-page .hero-content .hero-note {
+  font-size: 0.75rem;
+  line-height: 1.6;
+  letter-spacing: 0.06em;
+  color: var(--color-text-faint);
+}
+
+@media (min-width: 768px) {
+  .home-page .hero {
+    padding-block: var(--space-12) var(--space-10);
+  }
+
+  .home-page .hero-content {
+    grid-column: 2;
+  }
+}
+
 /* ============================================================
    SECTION LABEL — Anecdote ledger-style labels
    ============================================================ */
@@ -538,6 +560,8 @@ svg.logo-wordmark {
   justify-content: center;
   padding: var(--space-8);
   cursor: zoom-out;
+  overflow: hidden;
+  touch-action: none;
   opacity: 0;
   /* visibility keeps the closed viewer out of the tab order and the a11y tree.
      Closing delays the flip until the fade finishes; opening flips at once, so
@@ -566,6 +590,27 @@ svg.logo-wordmark {
   max-height: calc(100dvh - 11rem);
   object-fit: contain;
   border: none;
+  transform-origin: center center;
+  cursor: zoom-in;
+  user-select: none;
+  -webkit-user-drag: none;
+  touch-action: none;
+}
+
+.lightbox img.is-zoomed   { cursor: grab; }
+.lightbox img.is-panning  { cursor: grabbing; transition: none !important; }
+
+/* the zoomed photo spreads over the text under it, so let the text step aside */
+.lightbox-caption,
+.lightbox-exif,
+.lightbox-counter {
+  transition: opacity 200ms var(--ease-out);
+}
+.lightbox.is-zoomed .lightbox-caption,
+.lightbox.is-zoomed .lightbox-exif,
+.lightbox.is-zoomed .lightbox-counter {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .lightbox-close {
@@ -583,6 +628,24 @@ svg.logo-wordmark {
 }
 
 .lightbox-close:hover { color: #fff; }
+
+.lightbox-zoom {
+  position: absolute;
+  top: var(--space-6);
+  right: calc(var(--space-6) + 52px);
+  color: #d5d3ce;
+  padding: var(--space-2);
+  min-width: 44px;
+  min-height: 44px;
+  z-index: 101;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 200ms;
+}
+
+.lightbox-zoom:hover,
+.lightbox-zoom[aria-pressed="true"] { color: #fff; }
 
 .lightbox-prev,
 .lightbox-next {
@@ -722,20 +785,15 @@ svg.logo-wordmark {
 
 
 /* ============================================================
-   HOME GALLERY — full-width (bigger, keeps the balanced grid)
+   HOME GALLERY — full-width photographs
    ============================================================ */
-@media (min-width: 768px) {
-  #gallery {
-    grid-template-columns: 1fr;
-  }
-  #gallery .section-label {
-    display: none;
-  }
+.home-page #gallery {
+  grid-template-columns: 1fr;
+  padding-top: var(--space-8);
 }
 
-
 /* ============================================================
-   HOME GALLERY — banner + duo (layout 3, full-width)
+   HOME GALLERY — lead image and asymmetric supporting photographs
    ============================================================ */
 .gallery-grid--banner {
   display: block;

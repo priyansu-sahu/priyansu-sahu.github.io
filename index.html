@@ -47,7 +47,7 @@
   </script>
   <!-- @end -->
 </head>
-<body>
+<body class="home-page">
 
   <!-- Skip link -->
   <a href="#main" class="skip-link">Skip to content</a>
@@ -82,9 +82,8 @@
     <!-- ==================== MAIN ==================== -->
     <main id="main">
 
-      <!-- HERO — Anecdote ledger-style intro -->
+      <!-- HERO -->
       <section class="hero">
-        <div class="hero-label" aria-hidden="true"></div>
         <div class="hero-content">
           <h1>landscapes<br><em>&amp;</em> journeys</h1>
           <p>
@@ -98,10 +97,9 @@
 
       <!-- GALLERY -->
       <section class="section-row" id="gallery">
-        <div class="section-label" aria-hidden="true"></div>
         <div class="gallery-grid gallery-grid--banner">
 
-          <figure class="gallery-item reveal" data-lightbox style="background-color:#f8f8f8">
+          <figure class="gallery-item reveal" data-lightbox data-large="./assets/R0001320-lg.webp" style="background-color:#f8f8f8">
             <picture>
               <source srcset="./assets/R0001320.webp" type="image/webp">
               <img src="./assets/R0001320.jpg" alt="osaka streets" loading="eager" fetchpriority="high" decoding="sync" width="1620" height="1080">
@@ -110,7 +108,7 @@
           </figure>
 
           <div class="gallery-duo">
-            <figure class="gallery-item reveal" data-lightbox style="background-color:#080808">
+            <figure class="gallery-item reveal" data-lightbox data-large="./assets/R0001444-lg.webp" style="background-color:#080808">
               <picture>
                 <source srcset="./assets/R0001444.webp" type="image/webp">
                 <img src="./assets/R0001444.jpg" alt="wooden shrine hall with a bronze basin" loading="lazy" decoding="async" width="1600" height="1067">
@@ -118,7 +116,7 @@
               <figcaption class="gallery-caption">shrine hall <span class="gallery-caption-loc">tokyo</span></figcaption>
             </figure>
 
-            <figure class="gallery-item reveal" data-lightbox style="background-color:#181808">
+            <figure class="gallery-item reveal" data-lightbox data-large="./assets/R0000996-lg.webp" style="background-color:#181808">
               <picture>
                 <source srcset="./assets/R0000996.webp" type="image/webp">
                 <img src="./assets/R0000996.jpg" alt="ginger cat asleep in a cat caf&eacute;" loading="lazy" decoding="async" width="1600" height="1067">
@@ -126,7 +124,7 @@
               <figcaption class="gallery-caption">cat caf&eacute; <span class="gallery-caption-loc">kyoto</span></figcaption>
             </figure>
 
-            <figure class="gallery-item reveal" data-lightbox style="background-color:#e8e8e8">
+            <figure class="gallery-item reveal" data-lightbox data-large="./assets/R0001193-lg.webp" style="background-color:#e8e8e8">
               <picture>
                 <source srcset="./assets/R0001193.webp" type="image/webp">
                 <img src="./assets/R0001193.jpg" alt="river boat landing at arashiyama" loading="lazy" decoding="async" width="1067" height="1600">
@@ -171,6 +169,11 @@
     <button class="lightbox-close" aria-label="Close image viewer">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
         <path d="M18 6 6 18M6 6l12 12"/>
+      </svg>
+    </button>
+    <button class="lightbox-zoom" aria-label="Zoom in" aria-pressed="false">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/>
       </svg>
     </button>
     <button class="lightbox-prev" id="lightbox-prev" aria-label="Previous image">

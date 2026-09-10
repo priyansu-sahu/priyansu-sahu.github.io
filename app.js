@@ -58,13 +58,14 @@
   }
 })();
 
-// --- Lightbox with prev/next + keyboard/focus management ---
+// --- Lightbox with prev/next, zoom/pan, keyboard/focus management ---
 (function () {
   const lightbox = document.getElementById('lightbox');
   if (!lightbox) return; // guard — not all pages have a lightbox
 
   const lightboxImg = document.getElementById('lightbox-img');
-  const closeBtn = lightbox.querySelector('.lightbox-close');
+  const closeBtn  = lightbox.querySelector('.lightbox-close');
+  const zoomBtn   = lightbox.querySelector('.lightbox-zoom');
   const prevBtn   = document.getElementById('lightbox-prev');
   const nextBtn   = document.getElementById('lightbox-next');
   const counter   = document.getElementById('lightbox-counter');
@@ -72,8 +73,103 @@
   const exifEl    = document.getElementById('lightbox-exif');
 
   const items = Array.from(document.querySelectorAll('[data-lightbox]'));
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let currentIndex = -1;
   let lastFocus = null;
+
+  // ---- high-resolution tier ------------------------------------------
+  // The grid image (1600px, already in cache) shows at once; the -lg.webp
+  // from data-large swaps in when it has loaded. Where the photo renders at
+  // fewer device pixels than the grid file holds (a portrait phone, a small
+  // window) it is only fetched once the viewer zooms in.
+  var largeState = {};
+  function wantsLargeByDefault(index) {
+    var img = items[index] && items[index].querySelector('img');
+    if (!img) return false;
+    var aspect = (img.naturalWidth || +img.getAttribute('width') || 3) /
+                 (img.naturalHeight || +img.getAttribute('height') || 2);
+    var rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+    var maxW = window.innerWidth * 0.9, maxH = window.innerHeight - 11 * rem;
+    var w = Math.min(maxW, maxH * aspect);
+    return w * (window.devicePixelRatio || 1) > 1200;
+  }
+  function requestLarge(index) {
+    var item = items[index];
+    var url = item && item.dataset.large;
+    if (!url) return;
+    var abs = new URL(url, location.href).href;
+    if (lightboxImg.src === abs) return;
+    if (largeState[url] === 'done') { lightboxImg.src = url; return; }
+    if (largeState[url]) return;
+    largeState[url] = 'loading';
+    var im = new Image();
+    im.onload = function () {
+      largeState[url] = 'done';
+      if (currentIndex === index) lightboxImg.src = url;
+    };
+    im.onerror = function () { largeState[url] = 'error'; };
+    im.src = url;
+  }
+
+  // ---- zoom / pan ------------------------------------------------------
+  var scale = 1, tx = 0, ty = 0;
+  var suppressClick = false;
+
+  function dpr() { return window.devicePixelRatio || 1; }
+  // scale at which one image pixel maps to one device pixel
+  function oneToOne() {
+    var fit = lightboxImg.offsetWidth || 1;
+    return (lightboxImg.naturalWidth || fit) / (fit * dpr());
+  }
+  function maxScale() { return Math.min(8, Math.max(2.5, oneToOne())); }
+  // untransformed centre of the image, in viewport coordinates
+  function center() {
+    return { x: lightboxImg.offsetLeft + lightboxImg.offsetWidth / 2,
+             y: lightboxImg.offsetTop  + lightboxImg.offsetHeight / 2 };
+  }
+  function clampPan() {
+    var c = center();
+    var hw = lightboxImg.offsetWidth  * scale / 2;
+    var hh = lightboxImg.offsetHeight * scale / 2;
+    var vw = window.innerWidth, vh = window.innerHeight;
+    // keep the image edges outside the viewport while it is larger than it,
+    // and centred on its resting spot while it is not
+    tx = hw * 2 <= vw ? 0 : Math.min(hw - c.x, Math.max(vw - c.x - hw, tx));
+    ty = hh * 2 <= vh ? 0 : Math.min(hh - c.y, Math.max(vh - c.y - hh, ty));
+  }
+  function applyTransform(animate) {
+    lightboxImg.style.transition = (animate && !reducedMotion) ? 'transform 260ms cubic-bezier(.2,.7,.2,1)' : 'none';
+    lightboxImg.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+    var zoomed = scale > 1.001;
+    lightbox.classList.toggle('is-zoomed', zoomed);
+    lightboxImg.classList.toggle('is-zoomed', zoomed);
+    if (zoomBtn) {
+      zoomBtn.setAttribute('aria-pressed', zoomed ? 'true' : 'false');
+      zoomBtn.setAttribute('aria-label', zoomed ? 'Reset zoom' : 'Zoom in');
+    }
+  }
+  // zoom so that the point (px, py) stays under the cursor
+  function zoomTo(next, px, py, animate) {
+    next = Math.min(maxScale(), Math.max(1, next));
+    var c = center();
+    if (px == null) { px = c.x; py = c.y; }
+    var k = next / scale;
+    tx = px - c.x - (px - c.x - tx) * k;
+    ty = py - c.y - (py - c.y - ty) * k;
+    scale = next;
+    if (scale === 1) { tx = 0; ty = 0; }
+    clampPan();
+    applyTransform(animate);
+    if (scale > 1) requestLarge(currentIndex);
+  }
+  function resetZoom(animate) {
+    scale = 1; tx = 0; ty = 0;
+    applyTransform(animate);
+  }
+  function toggleZoom(px, py) {
+    if (scale > 1) resetZoom(true);
+    else zoomTo(Math.max(2, oneToOne()), px, py, true);
+  }
 
   function openLightbox(index) {
     const item = items[index];
@@ -81,7 +177,8 @@
     if (!img) return;
     if (currentIndex === -1) lastFocus = document.activeElement;
     currentIndex = index;
-    lightboxImg.src = img.src;
+    resetZoom(false);
+    lightboxImg.src = img.currentSrc || img.src;
     lightboxImg.alt = img.alt || 'Photograph';
     if (captionEl) {
       const cap = item.querySelector('.gallery-caption');
@@ -95,6 +192,7 @@
     document.body.style.overflow = 'hidden';
     updateNav();
     preloadNeighbors();
+    if (wantsLargeByDefault(index)) requestLarge(index);
     requestAnimationFrame(function () {
       if (closeBtn) closeBtn.focus();
     });
@@ -103,6 +201,7 @@
   function closeLightbox() {
     lightbox.classList.remove('active');
     document.body.style.overflow = '';
+    resetZoom(false);
     setTimeout(function () { lightboxImg.src = ''; }, 300);
     currentIndex = -1;
     if (lastFocus && typeof lastFocus.focus === 'function') {
@@ -152,12 +251,12 @@
     if (i !== -1) openLightbox(i);
   }
 
-  // fetch the full images either side so arrows/swipes feel instant
+  // fetch the grid-size images either side so arrows/swipes feel instant
   function preloadNeighbors() {
     [nearestVisible(currentIndex, -1), nearestVisible(currentIndex, 1)].forEach(function (i) {
       if (i === -1) return;
       var im = items[i].querySelector('img');
-      if (im) { var pre = new Image(); pre.src = im.src; }
+      if (im) { var pre = new Image(); pre.src = im.currentSrc || im.src; }
     });
   }
 
@@ -184,17 +283,82 @@
     });
   });
 
+  // click: the photo toggles zoom at the cursor, the backdrop closes
   lightbox.addEventListener('click', function (e) {
     if (swiped) return;
-    if (e.target === lightbox || e.target === lightboxImg) closeLightbox();
+    if (suppressClick) { suppressClick = false; return; }
+    if (e.target === lightboxImg) { toggleZoom(e.clientX, e.clientY); return; }
+    if (e.target === lightbox) closeLightbox();
   });
 
-  // touch swipe to flip photos
+  // wheel / trackpad pinch: zoom about the cursor
+  lightbox.addEventListener('wheel', function (e) {
+    if (!lightbox.classList.contains('active')) return;
+    e.preventDefault();
+    var factor = Math.exp(-e.deltaY * (e.deltaMode === 1 ? 0.05 : 0.0015));
+    zoomTo(scale * factor, e.clientX, e.clientY, false);
+  }, { passive: false });
+
+  // drag to pan while zoomed (mouse, pen and single finger)
+  var drag = null, pinch = null;
+  lightboxImg.addEventListener('pointerdown', function (e) {
+    if (scale <= 1 || pinch || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    drag = { id: e.pointerId, x: e.clientX, y: e.clientY, tx: tx, ty: ty, moved: false };
+    try { lightboxImg.setPointerCapture(e.pointerId); } catch (_) {}
+    lightboxImg.classList.add('is-panning');
+    e.preventDefault();
+  });
+  lightboxImg.addEventListener('pointermove', function (e) {
+    if (!drag || e.pointerId !== drag.id || pinch) return;
+    var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (Math.abs(dx) + Math.abs(dy) > 4) drag.moved = true;
+    tx = drag.tx + dx; ty = drag.ty + dy;
+    clampPan();
+    applyTransform(false);
+  });
+  function endDrag(e) {
+    if (!drag || e.pointerId !== drag.id) return;
+    var moved = drag.moved;
+    drag = null;
+    lightboxImg.classList.remove('is-panning');
+    if (moved) {
+      suppressClick = true;
+      setTimeout(function () { suppressClick = false; }, 300);
+    }
+  }
+  lightboxImg.addEventListener('pointerup', endDrag);
+  lightboxImg.addEventListener('pointercancel', endDrag);
+
+  // touch: swipe to flip photos when not zoomed, pinch to zoom
   var touchX = 0, touchY = 0, swiped = false;
+  function dist(t) { return Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY); }
+  function mid(t)  { return { x: (t[0].clientX + t[1].clientX) / 2, y: (t[0].clientY + t[1].clientY) / 2 }; }
   lightbox.addEventListener('touchstart', function (e) {
-    if (e.touches.length === 1) { touchX = e.touches[0].clientX; touchY = e.touches[0].clientY; }
+    if (e.touches.length === 2) {
+      drag = null;
+      lightboxImg.classList.remove('is-panning');
+      pinch = { d: dist(e.touches), s: scale };
+    } else if (e.touches.length === 1) {
+      touchX = e.touches[0].clientX; touchY = e.touches[0].clientY;
+    }
   }, { passive: true });
+  lightbox.addEventListener('touchmove', function (e) {
+    if (pinch && e.touches.length === 2) {
+      e.preventDefault();
+      var m = mid(e.touches);
+      zoomTo(pinch.s * dist(e.touches) / pinch.d, m.x, m.y, false);
+    }
+  }, { passive: false });
   lightbox.addEventListener('touchend', function (e) {
+    if (pinch) {
+      if (e.touches.length < 2) {
+        pinch = null;
+        suppressClick = true;
+        setTimeout(function () { suppressClick = false; }, 300);
+      }
+      return;
+    }
+    if (scale > 1) return;
     var t = e.changedTouches[0];
     var dx = t.clientX - touchX, dy = t.clientY - touchY;
     if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5) {
@@ -204,17 +368,25 @@
     }
   }, { passive: true });
 
+  window.addEventListener('resize', function () {
+    if (scale > 1) { clampPan(); applyTransform(false); }
+  });
+
   closeBtn && closeBtn.addEventListener('click', closeLightbox);
+  zoomBtn  && zoomBtn.addEventListener('click',  function (e) { e.stopPropagation(); toggleZoom(); });
   prevBtn  && prevBtn.addEventListener('click',  function (e) { e.stopPropagation(); showPrev(); });
   nextBtn  && nextBtn.addEventListener('click',  function (e) { e.stopPropagation(); showNext(); });
 
   document.addEventListener('keydown', function (e) {
     if (!lightbox.classList.contains('active')) return;
-    if (e.key === 'Escape')     { closeLightbox(); return; }
+    if (e.key === 'Escape')     { if (scale > 1) resetZoom(true); else closeLightbox(); return; }
     if (e.key === 'ArrowLeft')  { showPrev(); return; }
     if (e.key === 'ArrowRight') { showNext(); return; }
+    if (e.key === '+' || e.key === '=') { e.preventDefault(); zoomTo(scale * 1.5, null, null, true); return; }
+    if (e.key === '-')          { e.preventDefault(); zoomTo(scale / 1.5, null, null, true); return; }
+    if (e.key === '0')          { resetZoom(true); return; }
     if (e.key === 'Tab') {
-      const focusable = [closeBtn, prevBtn, nextBtn].filter(function (b) {
+      const focusable = [closeBtn, zoomBtn, prevBtn, nextBtn].filter(function (b) {
         return b && !b.disabled;
       });
       if (focusable.length === 0) return;

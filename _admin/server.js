@@ -135,6 +135,7 @@ function addPostIndexEntry({ slug, title, date, subtitle }) {
 }
 
 /* ---------- PHOTO ---------- */
+const LARGE_EDGE = 4000;
 async function addPhoto({ imageBase64, filename, caption, loc, alt }) {
   if (!sharp) throw new Error('sharp is not installed. Run "npm install" first.');
   if (!imageBase64) throw new Error('No image was provided.');
@@ -143,13 +144,16 @@ async function addPhoto({ imageBase64, filename, caption, loc, alt }) {
 
   let stem = (filename || '').replace(/\.[^.]+$/, '').replace(/[^A-Za-z0-9_-]/g, '');
   if (!stem) stem = 'photo-' + Date.now();
-  if (exists(R('assets', stem + '.jpg')) || exists(R('assets', stem + '.webp')))
+  if (exists(R('assets', stem + '.jpg')) || exists(R('assets', stem + '.webp')) || exists(R('assets', stem + '-lg.webp')))
     throw new Error(`assets/${stem}.* already exists, rename the file first.`);
 
   const buf = Buffer.from(String(imageBase64).replace(/^data:[^,]*,/, ''), 'base64');
   const pipe = sharp(buf).rotate().resize(1600, 1600, { fit: 'inside', withoutEnlargement: true });
   await pipe.clone().jpeg({ quality: 88, mozjpeg: true }).toFile(R('assets', stem + '.jpg'));
   await pipe.clone().webp({ quality: 82 }).toFile(R('assets', stem + '.webp'));
+  // high-resolution tier the lightbox swaps in and zooms into (see scripts/generate-large.js)
+  await sharp(buf).rotate().resize(LARGE_EDGE, LARGE_EDGE, { fit: 'inside', withoutEnlargement: true })
+    .webp({ quality: 90, effort: 6 }).toFile(R('assets', stem + '-lg.webp'));
   const meta = await sharp(R('assets', stem + '.jpg')).metadata();
   const stats = await sharp(R('assets', stem + '.jpg')).stats();
   const dom = stats.dominant;
@@ -169,7 +173,7 @@ async function addPhoto({ imageBase64, filename, caption, loc, alt }) {
     w: meta.width, h: meta.height,
   });
   return {
-    wrote: [`assets/${stem}.jpg`, `assets/${stem}.webp`, 'gallery/index.html'],
+    wrote: [`assets/${stem}.jpg`, `assets/${stem}.webp`, `assets/${stem}-lg.webp`, 'gallery/index.html'],
     preview: '/gallery/',
     note: `${meta.width}×${meta.height}` + (warn ? ` · ${warn}` : ''),
   };
@@ -195,7 +199,7 @@ function insertGalleryItem({ stem, caption, loc, alt, w, h, ph, exif }) {
   if (i < 0) throw new Error('Could not find the gallery section.');
   const at = i + anchor.length;
   const L = [``, ``,
-    `        <div class="gallery-item reveal" data-lightbox data-loc="${attr(loc)}"${ph ? ` style="background-color:${ph}"` : ''}${exif ? ` data-exif="${attr(exif)}"` : ''}>`,
+    `        <div class="gallery-item reveal" data-lightbox data-large="../assets/${stem}-lg.webp" data-loc="${attr(loc)}"${ph ? ` style="background-color:${ph}"` : ''}${exif ? ` data-exif="${attr(exif)}"` : ''}>`,
     `          <picture><source srcset="../assets/${stem}.webp" type="image/webp"><img src="../assets/${stem}.jpg" alt="${attr(alt)}" loading="lazy" decoding="async" width="${w}" height="${h}"></picture>`,
     `          <div class="gallery-caption">${typo(esc(caption))} <span class="gallery-caption-loc">${esc(loc)}</span></div>`,
     `        </div>`];
