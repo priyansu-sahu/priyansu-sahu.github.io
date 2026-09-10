@@ -584,21 +584,42 @@ svg.logo-wordmark {
   outline-color: #f0ede6;
 }
 
-.lightbox img {
-  max-width: 90vw;
-  max-height: calc(100vh - 11rem);
-  max-height: calc(100dvh - 11rem);
-  object-fit: contain;
-  border: none;
+/* The stage is sized from the photo's aspect ratio (--ar, set per photo),
+   not from whichever file is currently loaded, so the frame never moves
+   when the high-resolution file arrives. */
+.lightbox-stage {
+  --ar: 1.5;
+  position: relative;
+  flex: none;
+  width: min(90vw, calc((100vh - 11rem) * var(--ar)));
+  width: min(90vw, calc((100dvh - 11rem) * var(--ar)));
+  aspect-ratio: var(--ar);
   transform-origin: center center;
   cursor: zoom-in;
   user-select: none;
-  -webkit-user-drag: none;
   touch-action: none;
 }
 
-.lightbox img.is-zoomed   { cursor: grab; }
-.lightbox img.is-panning  { cursor: grabbing; transition: none !important; }
+.lightbox-stage img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+/* the high-resolution file fades in over the grid-size one */
+.lightbox-img-hi {
+  opacity: 0;
+  transition: opacity 320ms var(--ease-out);
+}
+.lightbox-img-hi.is-hi { opacity: 1; }
+
+.lightbox-stage.is-zoomed   { cursor: grab; }
+.lightbox-stage.is-panning  { cursor: grabbing; transition: none !important; }
 
 /* the zoomed photo spreads over the text under it, so let the text step aside */
 .lightbox-caption,

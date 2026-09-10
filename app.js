@@ -64,6 +64,8 @@
   if (!lightbox) return; // guard — not all pages have a lightbox
 
   const lightboxImg = document.getElementById('lightbox-img');
+  const stage       = document.getElementById('lightbox-stage') || lightboxImg;
+  const hiImg       = document.getElementById('lightbox-img-hi');
   const closeBtn  = lightbox.querySelector('.lightbox-close');
   const zoomBtn   = lightbox.querySelector('.lightbox-zoom');
   const prevBtn   = document.getElementById('lightbox-prev');
@@ -93,19 +95,46 @@
     var w = Math.min(maxW, maxH * aspect);
     return w * (window.devicePixelRatio || 1) > 1200;
   }
+  function showLarge(url, instant) {
+    if (!hiImg) { lightboxImg.src = url; return; }
+    hiImg.src = url;
+    // reveal once decoded so the fade never shows a half-painted image,
+    // with a short ceiling in case decode() stalls (background tabs do that)
+    var revealed = false;
+    var reveal = function () {
+      if (revealed) return;
+      revealed = true;
+      if (hiImg.getAttribute('src') !== url) return; // viewer moved on meanwhile
+      if (instant) hiImg.style.transition = 'none';
+      hiImg.classList.add('is-hi');
+      if (instant) { void hiImg.offsetWidth; hiImg.style.transition = ''; }
+    };
+    if (hiImg.decode) hiImg.decode().then(reveal, reveal);
+    setTimeout(reveal, 300);
+  }
+  function clearLarge() {
+    if (!hiImg) return;
+    hiImg.style.transition = 'none';
+    hiImg.classList.remove('is-hi');
+    hiImg.removeAttribute('src');
+    void hiImg.offsetWidth; // flush so the fade only applies from here on
+    hiImg.style.transition = '';
+  }
+  function largeShown() {
+    return !!(hiImg && hiImg.classList.contains('is-hi') && hiImg.naturalWidth);
+  }
   function requestLarge(index) {
     var item = items[index];
     var url = item && item.dataset.large;
     if (!url) return;
-    var abs = new URL(url, location.href).href;
-    if (lightboxImg.src === abs) return;
-    if (largeState[url] === 'done') { lightboxImg.src = url; return; }
+    if (largeShown()) return;
+    if (largeState[url] === 'done') { showLarge(url, true); return; }
     if (largeState[url]) return;
     largeState[url] = 'loading';
     var im = new Image();
     im.onload = function () {
       largeState[url] = 'done';
-      if (currentIndex === index) lightboxImg.src = url;
+      if (currentIndex === index) showLarge(url, false);
     };
     im.onerror = function () { largeState[url] = 'error'; };
     im.src = url;
@@ -118,19 +147,20 @@
   function dpr() { return window.devicePixelRatio || 1; }
   // scale at which one image pixel maps to one device pixel
   function oneToOne() {
-    var fit = lightboxImg.offsetWidth || 1;
-    return (lightboxImg.naturalWidth || fit) / (fit * dpr());
+    var fit = stage.offsetWidth || 1;
+    var nat = largeShown() ? hiImg.naturalWidth : lightboxImg.naturalWidth;
+    return (nat || fit) / (fit * dpr());
   }
   function maxScale() { return Math.min(8, Math.max(2.5, oneToOne())); }
   // untransformed centre of the image, in viewport coordinates
   function center() {
-    return { x: lightboxImg.offsetLeft + lightboxImg.offsetWidth / 2,
-             y: lightboxImg.offsetTop  + lightboxImg.offsetHeight / 2 };
+    return { x: stage.offsetLeft + stage.offsetWidth / 2,
+             y: stage.offsetTop  + stage.offsetHeight / 2 };
   }
   function clampPan() {
     var c = center();
-    var hw = lightboxImg.offsetWidth  * scale / 2;
-    var hh = lightboxImg.offsetHeight * scale / 2;
+    var hw = stage.offsetWidth  * scale / 2;
+    var hh = stage.offsetHeight * scale / 2;
     var vw = window.innerWidth, vh = window.innerHeight;
     // keep the image edges outside the viewport while it is larger than it,
     // and centred on its resting spot while it is not
@@ -138,11 +168,11 @@
     ty = hh * 2 <= vh ? 0 : Math.min(hh - c.y, Math.max(vh - c.y - hh, ty));
   }
   function applyTransform(animate) {
-    lightboxImg.style.transition = (animate && !reducedMotion) ? 'transform 260ms cubic-bezier(.2,.7,.2,1)' : 'none';
-    lightboxImg.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+    stage.style.transition = (animate && !reducedMotion) ? 'transform 260ms cubic-bezier(.2,.7,.2,1)' : 'none';
+    stage.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
     var zoomed = scale > 1.001;
     lightbox.classList.toggle('is-zoomed', zoomed);
-    lightboxImg.classList.toggle('is-zoomed', zoomed);
+    stage.classList.toggle('is-zoomed', zoomed);
     if (zoomBtn) {
       zoomBtn.setAttribute('aria-pressed', zoomed ? 'true' : 'false');
       zoomBtn.setAttribute('aria-label', zoomed ? 'Reset zoom' : 'Zoom in');
@@ -178,6 +208,11 @@
     if (currentIndex === -1) lastFocus = document.activeElement;
     currentIndex = index;
     resetZoom(false);
+    clearLarge();
+    // size the frame from the photo's own proportions, whichever file is showing
+    var ar = (img.naturalWidth || +img.getAttribute('width') || 3) /
+             (img.naturalHeight || +img.getAttribute('height') || 2);
+    if (stage !== lightboxImg) stage.style.setProperty('--ar', ar.toFixed(4));
     lightboxImg.src = img.currentSrc || img.src;
     lightboxImg.alt = img.alt || 'Photograph';
     if (captionEl) {
@@ -202,7 +237,7 @@
     lightbox.classList.remove('active');
     document.body.style.overflow = '';
     resetZoom(false);
-    setTimeout(function () { lightboxImg.src = ''; }, 300);
+    setTimeout(function () { lightboxImg.src = ''; clearLarge(); }, 300);
     currentIndex = -1;
     if (lastFocus && typeof lastFocus.focus === 'function') {
       lastFocus.focus();
@@ -287,7 +322,7 @@
   lightbox.addEventListener('click', function (e) {
     if (swiped) return;
     if (suppressClick) { suppressClick = false; return; }
-    if (e.target === lightboxImg) { toggleZoom(e.clientX, e.clientY); return; }
+    if (stage.contains(e.target)) { toggleZoom(e.clientX, e.clientY); return; }
     if (e.target === lightbox) closeLightbox();
   });
 
@@ -301,14 +336,14 @@
 
   // drag to pan while zoomed (mouse, pen and single finger)
   var drag = null, pinch = null;
-  lightboxImg.addEventListener('pointerdown', function (e) {
+  stage.addEventListener('pointerdown', function (e) {
     if (scale <= 1 || pinch || (e.pointerType === 'mouse' && e.button !== 0)) return;
     drag = { id: e.pointerId, x: e.clientX, y: e.clientY, tx: tx, ty: ty, moved: false };
-    try { lightboxImg.setPointerCapture(e.pointerId); } catch (_) {}
-    lightboxImg.classList.add('is-panning');
+    try { stage.setPointerCapture(e.pointerId); } catch (_) {}
+    stage.classList.add('is-panning');
     e.preventDefault();
   });
-  lightboxImg.addEventListener('pointermove', function (e) {
+  stage.addEventListener('pointermove', function (e) {
     if (!drag || e.pointerId !== drag.id || pinch) return;
     var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
     if (Math.abs(dx) + Math.abs(dy) > 4) drag.moved = true;
@@ -320,14 +355,14 @@
     if (!drag || e.pointerId !== drag.id) return;
     var moved = drag.moved;
     drag = null;
-    lightboxImg.classList.remove('is-panning');
+    stage.classList.remove('is-panning');
     if (moved) {
       suppressClick = true;
       setTimeout(function () { suppressClick = false; }, 300);
     }
   }
-  lightboxImg.addEventListener('pointerup', endDrag);
-  lightboxImg.addEventListener('pointercancel', endDrag);
+  stage.addEventListener('pointerup', endDrag);
+  stage.addEventListener('pointercancel', endDrag);
 
   // touch: swipe to flip photos when not zoomed, pinch to zoom
   var touchX = 0, touchY = 0, swiped = false;
@@ -336,7 +371,7 @@
   lightbox.addEventListener('touchstart', function (e) {
     if (e.touches.length === 2) {
       drag = null;
-      lightboxImg.classList.remove('is-panning');
+      stage.classList.remove('is-panning');
       pinch = { d: dist(e.touches), s: scale };
     } else if (e.touches.length === 1) {
       touchX = e.touches[0].clientX; touchY = e.touches[0].clientY;
