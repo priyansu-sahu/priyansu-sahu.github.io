@@ -179,7 +179,7 @@
 .article-content {
   font-family: var(--font-body);
   font-size: var(--text-base);
-  line-height: 1.85;
+  line-height: 1.65;
   color: var(--color-text);
   max-width: 65ch;
 }
