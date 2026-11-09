@@ -15,6 +15,7 @@ const TARGETS = [
   'writing/index.html',
   'writing/6-days/index.html',
   'writing/solo-travels/index.html',
+  'writing/ishq-mohabbat-pyaar/index.html',
   'tools/index.html',
   'tools/diff/index.html',
   'tools/wordcount/index.html',

@@ -44,43 +44,44 @@
 
 /* --- Light Mode (default) --- */
 :root, [data-theme="light"] {
-  --color-bg:          #faf8f3;
-  --color-surface:     #f5f2eb;
-  --color-text:        #1a1815;
-  --color-text-muted:  #6e6b64;
-  --color-text-faint:  #6f6c68;
-  --color-accent:      #5b3b40;
-  --color-link:        #5b3b40;
-  --color-border:      #d4d0c8;
-  --color-divider:     #e2dfd8;
+  /* washi paper, sumi ink, one clay accent */
+  --color-bg:          #f3efe7;
+  --color-surface:     #ebe5d9;
+  --color-text:        #23201b;
+  --color-text-muted:  #6a645a;
+  --color-text-faint:  #7d766b;
+  --color-accent:      #8c4f35;
+  --color-link:        #8c4f35;
+  --color-border:      #d6cebf;
+  --color-divider:     #e2dacd;
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* --- Dark Mode --- */
 [data-theme="dark"] {
-  --color-bg:          #141311;
-  --color-surface:     #1e1d1a;
-  --color-text:        #d5d3ce;
-  --color-text-muted:  #8a8882;
-  --color-text-faint:  #838079;
-  --color-accent:      #d4b896;
-  --color-link:        #d4b896;
-  --color-border:      #3d3c38;
-  --color-divider:     #2a2926;
+  --color-bg:          #171513;
+  --color-surface:     #201d19;
+  --color-text:        #ddd6ca;
+  --color-text-muted:  #9d9588;
+  --color-text-faint:  #8f877b;
+  --color-accent:      #cf9573;
+  --color-link:        #cf9573;
+  --color-border:      #3a352f;
+  --color-divider:     #2b2723;
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.045 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
-    --color-bg:          #141311;
-    --color-surface:     #1e1d1a;
-    --color-text:        #d5d3ce;
-    --color-text-muted:  #8a8882;
-    --color-text-faint:  #838079;
-    --color-accent:      #d4b896;
-    --color-link:        #d4b896;
-    --color-border:      #3d3c38;
-    --color-divider:     #2a2926;
+    --color-bg:          #171513;
+    --color-surface:     #201d19;
+    --color-text:        #ddd6ca;
+    --color-text-muted:  #9d9588;
+    --color-text-faint:  #8f877b;
+    --color-accent:      #cf9573;
+    --color-link:        #cf9573;
+    --color-border:      #3a352f;
+    --color-divider:     #2b2723;
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.045 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 }
@@ -870,3 +871,89 @@ svg.logo-wordmark {
   height: 1px;
   background: var(--hairline);
 }
+
+
+/* ============================================================
+   REFRESH — one left edge, frameless photos, calmer hover,
+   gentle arrival, footer links
+   ============================================================ */
+
+/* One left edge: the home intro and contact sit flush with the logo,
+   like the gallery, writing and quotes pages */
+@media (min-width: 768px) {
+  .home-page .hero {
+    grid-template-columns: 1fr;
+    padding-block: var(--space-12);
+  }
+  .home-page .hero-content { grid-column: auto; }
+  .home-page .section-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+  .home-page .section-label {
+    text-align: left;
+    padding-top: 0;
+  }
+}
+
+/* Frameless photos with more air between them */
+.gallery-item { border: 0; }
+.gallery-grid--banner > .gallery-item { margin-bottom: var(--space-8); }
+.gallery-duo { gap: var(--space-8); margin-bottom: var(--space-8); }
+.gallery-full { gap: var(--space-6); }
+@media (min-width: 1024px) {
+  .gallery-grid--banner > .gallery-item { margin-bottom: var(--space-10); }
+  .gallery-duo { gap: var(--space-10); margin-bottom: var(--space-10); }
+  .gallery-full { gap: var(--space-8); }
+}
+
+/* Calmer hover: a soft brighten instead of a zoom */
+.gallery-item img {
+  transition: opacity 400ms var(--ease-out), filter 600ms var(--ease-out);
+}
+.gallery-item:hover img {
+  transform: none;
+  filter: brightness(1.04) saturate(1.03);
+}
+.gallery-caption {
+  background: linear-gradient(to top, rgba(20, 17, 14, 0.55), transparent);
+  transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out);
+}
+.theme-toggle,
+.theme-toggle:hover { border-color: transparent; }
+.contact-email { border-bottom-color: var(--color-divider); }
+
+/* Gentle arrival: each page's sections fade up once as it opens */
+@media (prefers-reduced-motion: no-preference) {
+  main > * {
+    animation: arrive 900ms var(--ease-out) both;
+  }
+  main > *:nth-child(2) { animation-delay: 120ms; }
+  main > *:nth-child(3) { animation-delay: 240ms; }
+  main > *:nth-child(n+4) { animation-delay: 320ms; }
+}
+@keyframes arrive {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Footer: credit on the left, links on the right */
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-4) var(--space-8);
+  padding-block: var(--space-12) var(--space-16);
+  margin-top: var(--space-12);
+}
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+}
+.footer-links a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color var(--transition-interactive);
+}
+.footer-links a:hover { color: var(--color-text); }
