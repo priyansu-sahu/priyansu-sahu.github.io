@@ -1,5 +1,5 @@
 /* Blog — index and article styles
-   One left-aligned reading column: title, subtitle, byline row,
+   Index flush left, articles in one centered reading column: title, subtitle, byline row,
    then body text with a vertical rhythm set in em so it scales with the type. */
 
 :root {
@@ -7,13 +7,18 @@
   --text-article: clamp(1.1875rem, 1.1rem + 0.4vw, 1.3125rem); /* 19px phone, 21px desktop */
 }
 
-/* One left-aligned reading column for the index and every article,
-   flush with the logo */
+/* The writing index sits flush with the logo; each article is a
+   centered reading column, Substack-style */
 .blog-header,
 .post-list,
 .article-header,
 .article-body {
   max-width: var(--measure);
+}
+
+.article-header,
+.article-body {
+  margin-inline: auto;
 }
 
 /* ============================================================
