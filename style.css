@@ -579,6 +579,15 @@ svg.logo-wordmark {
   transition: opacity 300ms var(--ease-out), visibility 0s linear 0s;
 }
 
+/* Under reduced motion the page-wide 0.01ms transition (base.css) turns that
+   0s visibility flip into a real transition, which keeps the viewer hidden
+   for its first frame, so the close button could not take focus. */
+@media (prefers-reduced-motion: reduce) {
+  .lightbox.active {
+    transition: none !important;
+  }
+}
+
 /* The overlay is near-black in both themes, so the accent-colored page focus
    ring would sit at 1.9:1 against it. */
 .lightbox :focus-visible {
@@ -843,7 +852,9 @@ svg.logo-wordmark {
 }
 @media (min-width: 768px) {
   .gallery-duo {
-    grid-template-columns: 1.09fr 1fr;
+    /* The left column is sized so two stacked 3:2 frames plus the gap between
+       them are exactly as tall as the 2:3 frame on the right, at any width. */
+    grid-template-columns: calc((100% - var(--duo-gap, var(--space-6)) * 5 / 3) * 9 / 17) 1fr;
     align-items: start;
   }
   /* left col: shrine hall stacked over cat cafe; right: boat landing spans both rows */
@@ -899,11 +910,11 @@ svg.logo-wordmark {
 /* Frameless photos with more air between them */
 .gallery-item { border: 0; }
 .gallery-grid--banner > .gallery-item { margin-bottom: var(--space-8); }
-.gallery-duo { gap: var(--space-8); margin-bottom: var(--space-8); }
+.gallery-duo { --duo-gap: var(--space-8); gap: var(--duo-gap); margin-bottom: var(--space-8); }
 .gallery-full { gap: var(--space-6); }
 @media (min-width: 1024px) {
   .gallery-grid--banner > .gallery-item { margin-bottom: var(--space-10); }
-  .gallery-duo { gap: var(--space-10); margin-bottom: var(--space-10); }
+  .gallery-duo { --duo-gap: var(--space-10); margin-bottom: var(--space-10); }
   .gallery-full { gap: var(--space-8); }
 }
 
