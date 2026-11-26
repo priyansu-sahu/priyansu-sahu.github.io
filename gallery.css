@@ -111,6 +111,26 @@
   color: var(--color-text-muted);
 }
 
+/* The selected place is set in a heavier weight, which is wider. Reserve
+   that width on every chip so picking one never nudges its neighbors or
+   pushes a place onto the next line. */
+.filter-chip {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.filter-chip::after {
+  content: attr(data-filter);
+  content: attr(data-filter) / "";
+  font-weight: 500;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+  user-select: none;
+}
+
 .filter-chip.is-active {
   color: var(--color-text);
   font-weight: 500;
