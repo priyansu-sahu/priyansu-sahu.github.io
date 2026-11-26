@@ -49,7 +49,7 @@
   --color-surface:     #ebe5d9;
   --color-text:        #23201b;
   --color-text-muted:  #6a645a;
-  --color-text-faint:  #7d766b;
+  --color-text-faint:  #716a5f; /* 4.7:1 on the page color, passes WCAG AA */
   --color-accent:      #8c4f35;
   --color-link:        #8c4f35;
   --color-border:      #d6cebf;
