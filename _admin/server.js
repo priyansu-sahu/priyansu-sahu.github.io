@@ -99,12 +99,17 @@ function addPost({ title, date, subtitle, body }) {
   const titleE = esc(title.trim());
   const subE = esc(sub);
   const og = sub ? `${titleE} &middot; ${subE}` : titleE;
-  const desc = sub ? `${subE}. Writing by priyansu s.` : 'Writing by priyansu s.';
+  // Link-preview description: the subtitle, or else the post's opening
+  // paragraph, cut at a word boundary near 155 characters
+  let desc = sub ? `${sub}.` : (paras[0] || '');
+  if (desc.length > 155) desc = desc.slice(0, 155).replace(/\s+\S*$/, '') + '…';
+  if (!desc) desc = 'Writing by priyansu s.';
   html = html.split('{{TITLE}}').join(titleE)
              .split('{{SUBTITLE}}').join(subE)
              .split('{{DATE}}').join(esc(d))
              .split('{{OGTITLE}}').join(og)
-             .split('{{DESCRIPTION}}').join(esc(desc))
+             .split('{{DESCRIPTION}}').join(typo(esc(desc)).replace(/"/g, '&quot;'))
+             .split('{{SLUG}}').join(slug)
              .split('{{BODY}}').join(bodyHtml);
   if (!sub) html = html.replace(/\n[ \t]*<p class="article-subtitle"><\/p>/, '');
 
